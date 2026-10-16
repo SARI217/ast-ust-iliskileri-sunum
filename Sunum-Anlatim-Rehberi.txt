@@ -1,0 +1,260 @@
+﻿SUNUM ANLATIM REHBERİ
+Ast-Üst İlişkileri, Yetki ve Sorumluluk (Büro Yönetim Teknikleri, 4. Bölüm)
+
+Her slayt için önce tek cümlelik ana fikir, sonra slayttaki her parçanın ne demek olduğu ve bir örnek var. "Hoca sorarsa" kısımları olası sorular için. "(Konuşma notunda)" yazan bilgiler slaytta görünmüyor, sadece konuşma notunda geçiyor.
+
+
+========================================
+1. KAPAK
+========================================
+
+Ana fikir: Konuyu ve seni tanıtıyor.
+
+- Fotoğraf: 1949'da Beyaz Saray'da çekilmiş. Masada oturan kişi ABD Başkanı Harry Truman, bir kanunu imzalıyor. Çevresinde ayakta bekleyenler devlet yöneticileri.
+  - Neden bu fotoğraf: Ast-üst ilişkisini tek karede gösteriyor. Karar veren ve imza atan, yani yetkiyi kullanan kişi oturuyor; ötekiler bekliyor.
+  - Örnek: Okul müdürü odasında evrak imzalarken öğretmenlerin kapıda beklemesi aynı sahne.
+- Fotoğrafın altındaki yazı: "Abbie Rowe / NARA" fotoğrafı çeken kişi ve fotoğrafın bulunduğu arşiv. NARA, ABD Ulusal Arşivi. Fotoğraf kamu malı, kullanmak serbest.
+
+Hoca sorarsa:
+- "Bu fotoğraf neden var?" Hiyerarşiyi gösterdiği için. Aynı kişi 7. slaytta tekrar çıkıyor.
+
+
+========================================
+2. TÜRKİYE'DE AST-ÜST İLİŞKİLERİ
+========================================
+
+Ana fikir: Bizde amir genelde otoriter, ast itaatkâr. Bunun kültürel nedenleri var ve uluslararası bir ölçümde de görünüyor.
+
+- "Yöneticilerin astlarına karşı tavrı genellikle otokratik ya da buna yakındır."
+  - Otokratik: Kararları tek başına veren, kimseye danışmayan yönetim.
+  - Örnek: Müdürün kimseye sormadan "Yarından itibaren herkes 8'de burada" demesi.
+  - Notta bu özellikle kamu kesimi için söyleniyor. İlişkinin daha çok mevzuat (kanun, yönetmelik) konusu sayıldığı, insani yanının pek düşünülmediği de yazıyor.
+
+- Ast "baş üstüne" der, emri harfiyen yapar.
+  - Harfiyen: Kelimesi kelimesine, hiç değiştirmeden.
+  - Örnek: Memur işin daha kısa bir yolunu bilse bile söylemez, amir nasıl dediyse öyle yapar.
+  - Notta ast için "üstüne bağlı" ve "ağzı sıkı (ketum)" da deniyor.
+
+- Nedenleri:
+  - Askerlik: Askerde emir sorgulanmaz; komutan söyler, asker yapar. Bu alışkanlık iş hayatına taşınıyor.
+  - Ataerkil aile: Son sözü babanın söylediği aile. Evde babaya itiraz etmeyen, işte de amirine itiraz etmiyor.
+  - Ezberci ve baskıcı eğitim: Öğretmenin anlattığı, öğrencinin soru sormadan ezberlediği okul. Notta "geçmişte" diye özellikle belirtiliyor.
+
+- Biçimsel saygı: Makamda sigara içilmez, düzgün oturulur, sorulmadan konuşulmaz.
+  - Örnek: Müdürün odasında "buyurun oturun" denmeden oturmamak.
+  - Notta bunun özellikle klasik ve gelenekçi kurumlarda beklendiği yazıyor.
+
+- Arz ve rica (konuşma notunda): Resmî yazılar üst ve aynı düzeydeki makama "arz ederim", alt makama "rica ederim" diye biter. Bu kural Resmî Yazışma Yönetmeliği'nin 16. maddesinde.
+  - Örnek: Okul müdürü İl Millî Eğitim Müdürlüğüne yazarken "Gereğini arz ederim", kendi öğretmenlerine yazarken "Gereğini rica ederim" yazar.
+
+- Sağdaki grafik (Hofstede, güç mesafesi):
+  - Geert Hofstede, ülkelerin iş kültürünü karşılaştıran Hollandalı bir araştırmacı. Güç mesafesi, kullandığı ölçülerden biri.
+  - Güç mesafesi: Bir toplumda daha az güçlü olanların, gücün eşit dağılmamasını ne kadar beklediği ve kabul ettiği. Puan 0 ile 100 arasında. Puan büyüdükçe hiyerarşi daha normal karşılanıyor.
+  - Örnek: Puanı düşük bir ülkede (Danimarka, 18) çalışan, kararlarda kendisine danışılmasını bekler ve müdürüne itiraz etmesi olağandır. Puanı yüksek ülkede çalışan, ne yapacağının söylenmesini bekler.
+  - Türkiye 66 puanla Danimarka (18), Almanya (35) ve ABD'den (40) yüksek, Fransa (68) ile hemen hemen aynı. Rusya (93) ve Malezya (100) daha yüksek.
+  - Bağlantı: Ders notundaki "otoriter amir, itaatkâr ast" tespiti bu ölçümle de destekleniyor.
+
+Hoca sorarsa:
+- "Malezya neden 100?" Hofstede'nin ham verisinde 104. Ölçek 0-100 olsun diye 2014'te 100'e çekilmiş; kaynak sitede 100 yazıyor.
+- "Bu sayılar nereden?" Hofstede, Hofstede ve Minkov'un 2010 tarihli kitabından ve The Culture Factor'ın ülke karşılaştırma sitesinden.
+
+
+========================================
+3. AST-ÜST İLİŞKİLERİNİ ETKİLEYEN FAKTÖRLER
+========================================
+
+Ana fikir: Amir ile memurun ilişkisi sadece ikisine bağlı değil. Kurumun içinden, dışından ve kişilerin kendisinden gelen etkenler var.
+
+- Notta önce şu söyleniyor: Amir, astını yöneten kişidir ama bu, her dediğine kayıtsız şartsız uyulacağı anlamına gelmez. İlişki mevzuat, plan-program, örgüt kültürü, örf-adet, saygı ve nezaket kuralları içinde yürür.
+
+- Örgütsel (kurumun içinden gelenler):
+  - Mevzuat: Kanun, yönetmelik, yönerge; kimin neyi yapacağını yazılı olarak belirler. Örnek: Memurun görevleri 657 sayılı Kanun'da yazılı; amir kanuna aykırı emir veremez.
+  - Örgüt kültürü: Kurumun yazılı olmayan alışkanlıkları. Örnek: Bir kurumda müdürün kapısı herkese açık, başka birinde randevusuz girilmez.
+  - Yönetim tarzı: Amir kararları tek başına mı alıyor, ekibine mi danışıyor? Örnek: Toplantıda kimseye söz vermeyen müdür ile herkesin fikrini soran müdür.
+  - Değişiklikler, yenilikler: Yeni müdür gelmesi, birimlerin birleşmesi, yeni bir uygulama. Örnek: Yeni gelen müdür eski alışkanlıkları değiştirince ilişkiler de değişir.
+  - Kullanılan teknoloji: Örnek: Yazılar elektronik belge sistemiyle (EBYS) onaylanınca amir ile memur her iş için yüz yüze görüşmez olur.
+
+- Dış (kurumun dışından gelenler):
+  - Siyasal rejim: Devletin yönetim biçimi.
+  - Hükümet (siyasal yapı): İktidardaki hükümet ve politikaları. Örnek: Hükümet değişince kurumlarda üst düzey yöneticilerin değişmesi.
+  - Ekonomik yapı: Örnek: Kriz döneminde işini kaybetmekten korkan çalışan amirine daha az itiraz eder.
+  - Sosyo-kültürel yapı: Toplumun değerleri. Önceki slayttaki askerlik, aile ve okul etkisi bunun örneği.
+  - Çevre ve halk (müşteriler): Kurumun hizmet verdiği insanlar. Örnek: Vatandaşın şikâyeti üzerine amirin memuru uyarması.
+
+- Özel / Kişisel (kişilerin kendisinden gelenler):
+  - Kişilik farkları (yaş, cinsiyet, karakter): Örnek: Genç bir müdürün kendinden yaşça büyük memura iş verirken zorlanması.
+  - Eğitim ve meslek farkı: Notta sosyo-kültürel ve bölgesel farklılık da sayılıyor. Örnek: Farklı meslekten gelen amir ile ast aynı işe farklı açıdan bakabilir.
+  - Amaç ve çıkar farkı: Örnek: Amir işin hemen bitmesini, memur mesainin zamanında bitmesini ister.
+  - Kişisel güç (bilgi, beceri, uzmanlık): Örnek: Unvanı düşük ama mevzuatı en iyi bilen memurun sözünün dinlenmesi.
+  - Kural dışı emirler: Mevzuata ve plana aykırı istekler. Örnek: Amirin memura kendi özel işini yaptırması.
+  - Dedikodu, şikâyet, soruşturma: Ast ya da üst hakkında konuşulanlar. Örnek: Memur hakkında amire laf taşınması aradaki güveni bozar.
+
+Hoca sorarsa:
+- "Kişisel güç ne demek?" Makamdan değil, kişinin bilgisinden, becerisinden ve uzmanlığından gelen etki.
+
+
+========================================
+4. ÜST İLE AST ARASINDAKİ İLİŞKİLER
+========================================
+
+Ana fikir: İlişki iki taraflı. Üstün astına karşı, astın da üstüne karşı yükümlülükleri var; ast da üstünden bazı şeyler bekler.
+
+- Notta üç liste var: üstlerin astlarıyla ilişkileri (15 madde), astların üstleriyle ilişkileri (16 madde), astların üstlerden beklentileri (18 madde). Slayta her birinden dördünü koydum.
+
+- Üstlerin astlarıyla ilişkileri:
+  - Astlara insan olarak değer vermek. Örnek: Memurun adını bilmek, selamını almak, onu sadece "personel" olarak görmemek.
+  - Adil, tarafsız ve tutarlı olmak. Örnek: Yıllık izni herkese aynı kurala göre vermek; bugün bir şey, yarın başka şey söylememek.
+  - Emir vererek değil, ikna ederek yönetmek. Örnek: "Raporu cumaya bitireceksin" yerine "Rapor cuma bakanlığa gidecek, perşembe bitirirsek kontrol etmeye vaktimiz olur" demek.
+  - Başarıları astlarıyla paylaşmak. Örnek: Kurum ödül aldığında "ekibimin başarısı" demek.
+  - Notta başka maddeler de var: astları dinlemek, özel günlerinde sevinç ve üzüntülerini paylaşmak, dedikodu ve ispiyonculuğu desteklememek, özel hayatlarına karışmamak.
+
+- Astların üstleriyle ilişkileri:
+  - Üstüne saygılı olmak: söz ve davranışta.
+  - Hiyerarşiye uymak, amirini atlamamak. Örnek: Bir sorunu şefine söylemeden doğrudan müdüre götürmemek.
+  - Mevzuata uygun emirleri zamanında yerine getirmek. Örnek: İstenen yazıyı süresinde hazırlamak. "Mevzuata uygun" ifadesi önemli; bir sonraki slayt bunun üzerine.
+  - Üste sık sık sorun taşımamak, öneri sunmak. Örnek: "Yazıcı bozuldu" deyip bırakmak yerine "Yazıcı bozuldu, servisi aradım, yarın gelecekler; o zamana kadar yan odadakini kullanabiliriz" demek.
+  - Notta başka maddeler: üstün önüne geçmemek, gerektiğinde onu temsil etmek, çalışma saatlerine uymak, gereksiz tartışmaya girmemek.
+
+- Astların üstlerden beklentileri:
+  - İşinde eğitilmek, rehberlik edilmek. Örnek: Yeni başlayan memura işin nasıl yapıldığının gösterilmesi.
+  - Görüş ve fikrine başvurulmak. Örnek: Yeni bir uygulamaya geçmeden önce çalışanlara sorulması.
+  - Çabalarının takdir edilmesi. Örnek: Fazla mesaiye kalıp işi yetiştiren memura teşekkür edilmesi.
+  - Güvenilmek ve yetkilendirilmek. Örnek: Memura bir işi baştan sona kendisinin yürütmesi için yetki verilmesi.
+  - Notta başka maddeler: değişikliklerden zamanında haberdar edilmek, haklıyken savunulmak, terfi ve ödül, görevini, yetkisini ve sorumluluğunu bilmek.
+  - Notun cümlesi: Astlar bu beklentiler karşılandığı ölçüde daha etkili ve verimli çalışır.
+
+Hoca sorarsa:
+- "Neden sadece dördü?" Süre kısa olduğu için her listeden en temel dördünü seçtim; tam listeler ders notunda.
+
+
+========================================
+5. KANUNSUZ EMİR
+========================================
+
+Ana fikir: Ast, amirin her emrine uymak zorunda değil. Hangi emre uyulacağını kanun belirliyor.
+
+- Üstteki cümle (ders notu): Üst olmak, her emrin harfiyen yerine getirileceği anlamına gelmez. Bu slaytta bunun kanundaki karşılığını gösteriyorsun: Anayasa'nın 137. maddesi ve 657 sayılı Devlet Memurları Kanunu'nun 11. maddesi.
+
+- Emir mevzuata uygunsa: Yerine getirilir.
+  - Örnek: Müdür "Bu dilekçeyi bugün kayda al" der, memur kayda alır.
+
+- Emir mevzuata aykırıysa:
+  - Memur emri yerine getirmez ve aykırılığı emri verene bildirir.
+  - Amir emrinde ısrar eder ve emri yazıyla yenilerse memur emri yerine getirir. Bu durumda sorumluluk emri veren amire aittir.
+  - Örnek: Yönetmeliğe göre bir belge iki imzayla gönderilmeli ama müdür "tek imzayla gönder" diyor. Memur "Yönetmelik iki imza istiyor" diye bildirir. Müdür bunu yazılı olarak tekrarlarsa memur gönderir; sonradan sorun çıkarsa sorumlu müdür olur.
+  - Neden yazılı: Kimin emir verdiği belgeyle ortada kalsın, sonradan "ben öyle demedim" denemesin.
+
+- Emrin konusu suçsa:
+  - Hiçbir suretle yerine getirilmez. Amir yazılı emir verse bile yapılmaz. Yapan kişi "amirim söyledi" diyerek sorumluluktan kurtulamaz.
+  - Örnek: Müdür bir vatandaşın başvuru tarihini değiştirmeyi istiyor. Bu resmî belgede sahtecilik, yani suç; memur bunu yapmaz.
+
+- İki kanunun farkı: Anayasa "emri yerine getiren sorumlu olmaz" der, 657 sayılı Kanun "sorumluluk emri verene aittir" der. İkisi aynı şeyi anlatıyor.
+
+Hoca sorarsa:
+- "İstisnası var mı?" Var. Anayasa'ya göre askerî hizmetler ile acele durumlarda kamu düzeni ve güvenliği için kanunla getirilen istisnalar saklı.
+
+
+========================================
+6. YETKİ NEDİR?
+========================================
+
+Ana fikir: Yetki bir şeyi yapma hakkıdır. Dört türü vardır. Bir kısmı başkasına devredilebilir ama hepsi değil.
+
+- "Yetki, bir şeyi yapma hakkıdır."
+  - Örnek: Müdürün izin dilekçelerini onaylama hakkı.
+
+- Örgütleme açısından: Yöneticinin, kurumun amaçlarına ulaşmak için astından bir şey rica etme ya da bir işi yapmasını isteme hakkı.
+  - Örnek: Müdürün memura "Bu yazıyı hazırla" deme hakkı.
+
+- "Kurumu bir arada tutan yapışkan" (konuşma notunda): Kimin kime iş verebileceği belli olmasa kurum dağılır. Yetki herkesin yerini ve rolünü belirler.
+
+- Fayol (konuşma notunda): Henri Fayol, Fransız bir maden mühendisi ve yönetici. 1916'da yazdığı kitapta yönetim ilkelerini sıralamış. Ona göre yetki, emir verme hakkı ve itaat ettirme gücüdür. Ders notundaki tanımla aynı yöne bakıyor.
+
+- Yetki türleri:
+
+  1) Yasal yetki
+     Ne demek: Bir işi yapmaya yasal yönden verilen izin. Atama ile başlar.
+     Örnek: Okul müdürü olarak atanan kişinin öğretmenlere görev dağıtma yetkisi, atandığı gün başlar.
+
+  2) Teknik yetki
+     Ne demek: Bir alanda uzman sayılan kişinin yetkisi. Kişiye bağlıdır; kişi başka göreve geçince onunla gider. Yönetici bunu veremez, elinden de alamaz.
+     Örnek: Kurumdaki bilgisayar uzmanının, unvanı ne olursa olsun bilgisayar konusunda sözünün dinlenmesi.
+
+  3) Nihai yetki
+     Ne demek: Son ve en üst yetki. Kişiye "şöyle ya da böyle davran" hakkını veren yetkinin kaynağıyla ilgilidir; diğer yetkiler buna dayanır.
+     Örnek: Bir şirkette nihai yetki şirketin sahiplerindedir; genel müdürün yetkisi de onlardan gelir. Kamuda yetkinin kaynağı kanundur.
+
+  4) İcra yetkisi
+     Ne demek: Kişiye belirli şeyleri yapma izni vermek.
+     Örnek: Notun örneği, ustabaşının işçinin makineyi çalıştırmasına ve malzemeyi kullanmasına izin vermesi. Büroda: şefin memura arşive girip dosyaları kullanma izni vermesi.
+
+- Yetki devri (sağdaki siyah kutu):
+  - Üstün, kendi işini yapması için astına yetki vermesi. Örnek: Müdürün yıllık izin onaylarını şefe bırakması.
+  - Notta yetki devri olmadan formal örgütlerin var olamayacağı yazıyor. Çünkü bir müdür her işi tek başına yapamaz.
+  - Ama yönetici yetkisinin ancak bir kısmını devredebilir. Şu işlevlerdeki yetkisini tümüyle devredemez:
+    - Yaratıcılık: Yeni fikir üretmek, kurumun yönünü belirlemek.
+    - Planlama: Neyin, ne zaman, nasıl yapılacağına karar vermek.
+    - Örgütleme: İşleri ve kişileri düzenlemek, kimin hangi işe bakacağını belirlemek.
+    - Teşvik: Çalışanları isteklendirmek, motive etmek.
+    - Haberleşme: Kurum içinde bilgi akışını sağlamak.
+    - Kontrol: İşlerin plana uygun yürüyüp yürümediğini denetlemek.
+  - Örnek: Müdür izin onayını şefe devredebilir. Ama izinlerin kurallara göre verilip verilmediğini kontrol etmeyi tamamen bırakamaz. Bırakırsa, notun dediği gibi yöneticilik rolünü terk etmiş olur.
+
+Hoca sorarsa:
+- "Teknik yetki neden devredilemez?" Çünkü makamdan değil, kişinin bilgisinden gelir; yönetici kimseye uzmanlık veremez.
+
+
+========================================
+7. SORUMLULUK NEDİR?
+========================================
+
+Ana fikir: Yetki devredilebilir ama sorumluluk devredilemez. İşin hesabı yine yetkiyi devredenden sorulur.
+
+- "Sorumluluk, bir görevi yapma, yani yetkiyi kullanma zorunluluğudur."
+  - Örnek: Müdürün izin onaylama yetkisi var; bu işi zamanında ve kurallara uygun yapmak da onun sorumluluğu.
+  - Notta ayrıca, kurumun koyduğu kurallara uymayanın kim olursa olsun cezalandırılacağı yazıyor.
+
+- "Yetki devredilebilir, sorumluluk devredilemez." Kırmızı cümle; bölümün en önemli noktası.
+  - Örnek: Müdür izin onayını şefe devretti, şef kurala aykırı bir izin verdi. Müfettiş geldiğinde müdür "Ben o yetkiyi devretmiştim" diyemez; müdür de sorumlu.
+
+- "Yetkisini devreden yöneticinin sorumluluğu azalmaz, hatta artar."
+  - Neden artıyor: Yönetici artık hem astını denetlemek zorunda, hem de işin yapılmasından sorumlu.
+
+- Alıntı (1 sayılı Cumhurbaşkanlığı Kararnamesi, m.16/3): "Yetki devri, yetki devreden amirin sorumluluğunu kaldırmaz."
+  - Ders notundaki ilkenin bugünkü mevzuattaki karşılığı. Bu madde Cumhurbaşkanlığı Genel Sekreterliği için yazılmış; aynı cümle başka düzenlemelerde de geçiyor.
+
+- Fotoğraf: Truman, 1959'da Truman Kütüphanesi'nde, Oval Ofis'in kopyası olan odada. Önündeki tabelada "The buck stops here" yazıyor.
+  - İngilizcede "pass the buck" sorumluluğu başkasına atmak demek. "The buck stops here" de "sorumluluk burada biter, ben başkasına atmam" demek.
+  - Tabela 1945'te Oklahoma'daki El Reno Islahevi'nde yapılıp Truman'a gönderilmiş; arkasında "I'm From Missouri" yazıyor. Truman bu sözü 1952'deki bir konuşmasında da kullanmış.
+  - Kapakta imza atan da Truman'dı. Kapakta yetkiyi kullanırken, burada sorumluluğu üstlenirken görüyoruz.
+
+- Sorumluluğun kuralları:
+
+  1) Bir kimse birden fazla kişiye karşı sorumlu olmamalı.
+     - Örnek: İki müdür aynı memura aynı anda farklı işler verirse memur hangisini yapacağını bilemez, kime hesap vereceği de belirsizleşir.
+     - Notta bu, "Bir kimse iki efendiye birden iyi bir şekilde hizmet edemez" sözüyle anlatılıyor. Fayol buna "emir birliği" diyor: Bir çalışan bir iş için emri yalnızca bir amirden almalı.
+
+  2) Sorumluluk, yetkiyle eşit olmalı.
+     - Örnek: Memura "Bu projeden sen sorumlusun" deyip harcama yapma ya da kişi görevlendirme yetkisi vermemek haksızlık; yetkisi olmayan kişi işi yürütemez.
+     - Notta bunun iki şartı var:
+       - Devredilen yetki çoğu zaman sınırlıdır. Kişi ancak gerçekten kendi kontrolündeki işten sorumlu tutulabilir.
+       - Yetkisi sadece durumu incelemek ve geliştirmek olan kişi de hataları bulup düzeltmekten sorumludur. Örnek: Karar yetkisi olmayan bir denetim görevlisi, gördüğü hatayı ortaya çıkarmaktan sorumludur.
+
+Hoca sorarsa:
+- "'İki efendi' sözü nereden geliyor?" Kökeni İncil'de Matta 6:24. Notta atasözü olarak geçiyor.
+
+
+========================================
+8. SONUÇ
+========================================
+
+Ana fikir: Bölümün tamamı tek cümlede: yetki ve sorumluluk denk olmalı.
+
+- "Yönetici, işi kadar sorumluluğa, sorumluluğu kadar da yetkiye sahip olmalıdır." Notun kendi sonuç cümlesi.
+  - Yetki sorumluluktan fazlaysa: Kişi hesabını vermeyeceği kararlar alabilir, keyfî davranabilir.
+  - Sorumluluk yetkiden fazlaysa: Kişi elinde olmayan bir işin hesabını verir ve işi yürütemez.
+  - Örnek: Bir şubeden sorumlu müdür, o şubenin personeline ve harcamalarına karar verebilmeli. Veremiyorsa şubenin sonuçlarından tek başına sorumlu tutulmamalı.
+
+- Kaynaklar: Ders notu dışında kullandığım her şey burada; fotoğrafların kamu malı olduğu da yazıyor.
+
+- Sonra teşekkür edip soruları alıyorsun.
