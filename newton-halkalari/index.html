@@ -174,6 +174,21 @@ th{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut
 .radios input{accent-color:var(--accent)}
 select{font:inherit;padding:5px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
 .note{font-size:.875rem;color:var(--muted);margin:0}
+.focusbtns{display:flex;flex-wrap:wrap;gap:6px}
+.focusbtn{font:inherit;font-size:.9rem;padding:5px 14px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.focusbtn:hover{border-color:var(--accent)}
+.focusbtn[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+#geo6 .seg{stroke:var(--ink);stroke-width:2;fill:none}
+#geo6 .seg-d{stroke:var(--accent);stroke-width:2.5}
+#geo6 text.dtext{fill:var(--accent)}
+#geo6 .part{transition:opacity .2s}
+#geo6 .only{display:none}
+#geo6[data-focus] .part{opacity:.15}
+#geo6[data-focus="R"] .part-R,#geo6[data-focus="r"] .part-r,#geo6[data-focus="d"] .part-d,#geo6[data-focus="Rd"] .part-Rd{opacity:1}
+#geo6[data-focus="R"] .only-R,#geo6[data-focus="d"] .only-d,#geo6[data-focus="Rd"] .only-Rd{display:inline}
+#geo6[data-focus="R"] :is(.part-R,.only-R) .seg,#geo6[data-focus="r"] .part-r .seg,#geo6[data-focus="Rd"] .part-Rd .seg{stroke:var(--accent);stroke-width:4}
+#geo6[data-focus="d"] .seg-d,#geo6[data-focus="Rd"] .only-Rd .seg-d{stroke-width:4}
+#geo6[data-focus="R"] :is(.part-R,.only-R) text,#geo6[data-focus="r"] .part-r text,#geo6[data-focus="Rd"] .part-Rd text{fill:var(--accent);font-weight:600}
 .calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px}
 fieldset{border:1px solid var(--line);border-radius:12px;padding:14px;margin:0;min-width:0;display:grid;gap:10px;background:var(--surface)}
 legend{font-weight:700;padding:0 6px;font-family:var(--font-display);font-size:1.05rem}
@@ -577,33 +592,64 @@ details p:last-child{margin-bottom:0}
     <p class="lead">d'yi ölçemeyiz ama halkanın yarıçapı r'yi ölçebiliriz. İkisini Pisagor bağlıyor.</p>
   </div>
   <figure class="bench">
+    <div class="focusbtns" role="group" aria-label="Parçaları tek tek göster">
+      <button type="button" class="focusbtn" data-focus="" aria-pressed="true">Hepsi</button>
+      <button type="button" class="focusbtn" data-focus="R" aria-pressed="false">1 · R</button>
+      <button type="button" class="focusbtn" data-focus="r" aria-pressed="false">2 · r</button>
+      <button type="button" class="focusbtn" data-focus="d" aria-pressed="false">3 · d</button>
+      <button type="button" class="focusbtn" data-focus="Rd" aria-pressed="false">4 · R − d</button>
+    </div>
     <div class="fig-scroll">
-      <svg viewBox="0 0 600 385" role="img" aria-label="Geometri: küre merkezi O, yarıçap R, yatay r, dikey R eksi d, hava kalınlığı d">
+      <svg id="geo6" viewBox="0 0 600 385" role="img" aria-label="Geometri: küre merkezi O, yarıçap R, yatay r, dikey R eksi d, hava kalınlığı d">
         <circle class="dash" cx="300" cy="30" r="300"/>
         <path class="glass" d="M130,225 L470,225 L470,277.2 A300,300 0 0 1 130,277.2 Z"/>
         <rect class="glass" x="60" y="330" width="480" height="30"/>
-        <line class="ink" x1="300" y1="30" x2="470" y2="277.2"/>
-        <line class="ink" x1="300" y1="30" x2="300" y2="277.2"/>
-        <line class="ink" x1="300" y1="277.2" x2="470" y2="277.2"/>
+        <g class="part part-R">
+          <line class="seg" x1="300" y1="30" x2="470" y2="277.2"/>
+          <text class="math" x="398" y="150">R</text>
+        </g>
+        <g class="part part-Rd">
+          <line class="seg" x1="300" y1="30" x2="300" y2="277.2"/>
+          <text class="math" x="290" y="160" text-anchor="end">R − d</text>
+        </g>
+        <g class="part part-r">
+          <line class="seg" x1="300" y1="277.2" x2="470" y2="277.2"/>
+          <text class="math" x="380" y="268">r</text>
+        </g>
         <path class="ink" d="M300,265 L312,265 L312,277.2" style="stroke-width:1.5"/>
-        <line class="dimline" x1="470" y1="277.2" x2="470" y2="330"/>
+        <g class="part part-d">
+          <line class="seg seg-d" x1="470" y1="277.2" x2="470" y2="330"/>
+          <text class="math dtext" x="482" y="310">d</text>
+        </g>
+        <g class="only only-R">
+          <line class="seg" x1="300" y1="30" x2="300" y2="330"/>
+          <text class="math" x="290" y="200" text-anchor="end">R</text>
+        </g>
+        <g class="only only-d only-Rd">
+          <line class="seg seg-d" x1="300" y1="277.2" x2="300" y2="330"/>
+          <text class="math dtext" x="290" y="310" text-anchor="end">d</text>
+        </g>
         <circle class="dot" cx="300" cy="30" r="4.5"/>
         <circle class="dot" cx="300" cy="330" r="4"/>
         <circle class="dot" cx="470" cy="277.2" r="4"/>
         <text x="312" y="36" style="font-weight:600">O</text>
         <text class="muted" x="330" y="36">(kürenin merkezi)</text>
-        <text class="math" x="398" y="150">R</text>
-        <text class="math" x="290" y="160" text-anchor="end">R − d</text>
-        <text class="math" x="380" y="268">r</text>
-        <text class="math acc" x="482" y="310" style="fill:var(--accent)">d</text>
         <text x="300" y="380" text-anchor="middle" style="font-weight:600">T</text>
         <text class="muted" x="140" y="250">mercek</text>
         <text class="muted" x="72" y="352">düz cam</text>
       </svg>
     </div>
+    <p class="result" id="geo6text" role="status">Butonlarla parçalara tek tek bak.</p>
     <figcaption>Merceğin tümsek yüzü, yarıçapı R olan büyük bir kürenin küçük bir parçası. d burada abartılı çizildi.</figcaption>
   </figure>
   <div class="prose">
+    <p><strong>Önce harfler:</strong></p>
+    <ul>
+      <li><strong>R (büyük)</strong>: merceğin parçası olduğu kocaman kürenin yarıçapı. Merceğin ne kadar kavisli olduğunu söyler. Her mercek için <strong>sabit</strong>, metreler mertebesinde.</li>
+      <li><strong>r (küçük)</strong>: halkanın yarıçapı, yani ortadaki T noktasından halkaya olan yatay uzaklık. Her halka için <strong>farklı</strong>, milimetreler mertebesinde. Ölçtüğümüz şey bu.</li>
+      <li><strong>d</strong>: o halkanın üstündeki hava kalınlığı.</li>
+      <li><strong>R − d</strong>: O'dan T'ye inen dikey çizginin boyu R. Ama üçgen, merceğin üstündeki noktanın hizasında bitiyor. Alttaki d kadarlık parça üçgenin dışında kalıyor, geriye R − d kalıyor.</li>
+    </ul>
     <ol>
       <li>Şekildeki dik üçgenin hipotenüsü <span class="f"><i>R</i></span>, dik kenarları <span class="f"><i>r</i></span> ve <span class="f"><i>R</i> − <i>d</i></span>.</li>
       <li>Pisagor: <span class="f"><i>R</i>² = <i>r</i>² + (<i>R</i> − <i>d</i>)²</span></li>
@@ -1437,6 +1483,23 @@ details p:last-child{margin-bottom:0}
   }
   d0In.addEventListener('input', upd10);
   upd10();
+
+  /* ---------- Adım 6: parça parça geometri ---------- */
+  var geo6 = $('#geo6'), geo6text = $('#geo6text'), focusBtns = $$('.focusbtn');
+  var GEO_TEXT = {
+    '': 'Butonlarla parçalara tek tek bak.',
+    R: 'R: kocaman kürenin yarıçapı. O merkezinden küre yüzeyindeki her noktaya uzaklık R; hem T\'ye hem merceğin üstündeki noktaya. Mercekle gelen sabit bir sayı.',
+    r: 'r: halkanın yarıçapı. Ortadaki eksenden (T\'nin üstünden) halkadaki noktaya olan yatay uzaklık. Perdede ölçtüğümüz şey bu.',
+    d: 'd: o noktadaki hava kalınlığı. Nokta, düz camdan d kadar yukarıda. Eksen üstünde de aynı d\'yi işaretledik: aynı yükseklik.',
+    Rd: 'R − d: O\'dan T\'ye kadar dikey çizginin tamamı R. Üçgenin dik kenarı noktanın hizasında bitiyor; alttaki d kadarlık parça dışarıda kalıyor. R − d + d = R.'
+  };
+  function setFocus(f) {
+    if (f) geo6.setAttribute('data-focus', f); else geo6.removeAttribute('data-focus');
+    focusBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.focus === f)); });
+    geo6text.textContent = GEO_TEXT[f];
+  }
+  focusBtns.forEach(function (b) { b.addEventListener('click', function () { setFocus(b.dataset.focus); }); });
+  setFocus('');
 })();
 </script>
 
