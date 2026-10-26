@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+<title>Newton Halkaları Defteri</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=STIX+Two+Text:ital,wght@0,400;1,400&display=swap">
+<style>
+/* Layout: solda sabit adım listesi + sağda tek adımlık çalışma alanı; telefonda adımlar üstte yatay şerit */
+:root{
+  --bg:#eef1f5; --surface:#ffffff; --ink:#152030; --muted:#566273; --line:#d3dae4;
+  --accent:#a95800; --accent-ink:#ffffff; --accent-soft:#fbead2;
+  --ray2:#2a63c4; --glass:#d6e5f2; --glass-edge:#8fb0cc;
+  --ok:#1d7347; --ok-soft:#dcf1e5; --no:#b0281f; --no-soft:#f8e0dd;
+  --chip-dark:#1b2533; --chip-dark-ink:#f2f5f9; --chip-bright:#ffd36b; --chip-bright-ink:#2b1d00;
+  --font-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --font-body:"IBM Plex Sans","Segoe UI",system-ui,-apple-system,sans-serif;
+  --font-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e131a; --surface:#151c26; --ink:#e5eaf1; --muted:#9aa5b4; --line:#2a3546;
+    --accent:#ffb347; --accent-ink:#1f1400; --accent-soft:#33240f;
+    --ray2:#78a9ff; --glass:#1c2b3c; --glass-edge:#4f6f8f;
+    --ok:#5fd394; --ok-soft:#14301f; --no:#ff8a80; --no-soft:#3a1714;
+    --chip-dark:#05080c; --chip-dark-ink:#e5eaf1; --chip-bright:#ffd36b; --chip-bright-ink:#2b1d00;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e131a; --surface:#151c26; --ink:#e5eaf1; --muted:#9aa5b4; --line:#2a3546;
+  --accent:#ffb347; --accent-ink:#1f1400; --accent-soft:#33240f;
+  --ray2:#78a9ff; --glass:#1c2b3c; --glass-edge:#4f6f8f;
+  --ok:#5fd394; --ok-soft:#14301f; --no:#ff8a80; --no-soft:#3a1714;
+  --chip-dark:#05080c; --chip-dark-ink:#e5eaf1; --chip-bright:#ffd36b; --chip-bright-ink:#2b1d00;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;margin:0 auto;padding-block:24px 56px;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.top{display:flex;flex-wrap:wrap;gap:10px 24px;align-items:flex-end;justify-content:space-between;padding-bottom:18px;margin-bottom:24px;border-bottom:1px solid var(--line)}
+.top h1{font-family:var(--font-display);font-weight:700;font-size:clamp(1.9rem,1.3rem + 2.2vw,2.75rem);line-height:1.05;margin:0;letter-spacing:-0.01em;text-wrap:balance}
+.top p{margin:6px 0 0;color:var(--muted)}
+.lamtag{font-family:var(--font-math);font-size:1.05rem;color:var(--muted);white-space:nowrap}
+.lamtag i{color:var(--ink)}
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:32px;align-items:start}
+.steps{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 16px)}
+.steps ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;position:relative}
+.steps button{display:flex;gap:10px;align-items:baseline;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:8px 10px;font:inherit;font-size:.95rem;color:var(--muted);cursor:pointer}
+.steps .n{font-family:var(--font-display);font-weight:700;min-width:1.5em;font-variant-numeric:tabular-nums}
+.steps button:hover{background:var(--surface);color:var(--ink)}
+.steps button[aria-current="step"]{background:var(--surface);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--accent)}
+.steps button[aria-current="step"] .n{color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+@media (max-width:880px){
+  .layout{grid-template-columns:minmax(0,1fr);gap:16px}
+  .steps{position:static}
+  .steps ol{flex-direction:row;overflow-x:auto;padding-bottom:6px;scrollbar-width:thin}
+  .steps li{flex:0 0 auto}
+  .steps button{white-space:nowrap;width:auto;border:1px solid var(--line)}
+}
+main{min-width:0}
+.step{display:flex;flex-direction:column;gap:22px}
+.head{display:flex;flex-direction:column;gap:6px}
+.eyebrow{margin:0;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.step h2{font-family:var(--font-display);font-weight:700;font-size:clamp(1.5rem,1.2rem + 1.2vw,2.05rem);line-height:1.15;margin:0;text-wrap:balance}
+.lead{font-size:1.125rem;color:var(--muted);margin:0;max-width:62ch}
+.bench{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.fig-scroll{overflow-x:auto}
+.fig-scroll svg{display:block;width:100%;min-width:460px;height:auto}
+.fig-scroll svg#lensSvg{min-width:0}
+.bench figcaption{font-size:.875rem;color:var(--muted)}
+.controls{display:grid;gap:10px}
+.controls label,.lbl-strong{font-weight:600}
+input[type=range]{width:100%;accent-color:var(--accent)}
+output{font-variant-numeric:tabular-nums}
+.result{margin:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.prose{max-width:68ch}
+.prose p,.prose ul,.prose ol{margin:0 0 12px}
+.prose > :last-child{margin-bottom:0}
+.prose li{margin-bottom:6px}
+.prose li:last-child{margin-bottom:0}
+.keep{border:1.5px solid var(--accent);border-radius:12px;padding:14px 16px;background:var(--accent-soft);max-width:68ch}
+.keep .k{display:block;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;font-weight:700;margin-bottom:4px}
+.keep p{margin:0}
+.keep p + p{margin-top:6px}
+.f{font-family:var(--font-math);font-size:1.15em;white-space:nowrap}
+.formula{font-family:var(--font-math);font-size:1.35rem;display:flex;flex-wrap:wrap;gap:6px 32px;margin:4px 0}
+.formula span{white-space:nowrap}
+.formula small{font-family:var(--font-body);font-size:.8rem;color:var(--muted);display:block}
+.chip{display:inline-block;padding:3px 12px;border-radius:999px;font-weight:600;font-size:.9rem;border:1px solid var(--line)}
+.chip.aydinlik{background:var(--chip-bright);color:var(--chip-bright-ink);border-color:transparent}
+.chip.karanlik{background:var(--chip-dark);color:var(--chip-dark-ink)}
+.chip.arada{background:var(--bg);color:var(--ink)}
+.quiz{border-top:1px dashed var(--line);padding-top:16px;max-width:68ch}
+.quiz .qt{display:block;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+.quiz .q{font-weight:600;margin:0 0 10px}
+.quiz .opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:inherit;padding:8px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;text-align:left}
+.opt:hover{border-color:var(--accent)}
+.opt.is-right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.is-wrong{border-color:var(--no);background:var(--no-soft)}
+.fb{margin:10px 0 0;padding:10px 12px;border-radius:10px}
+.fb-ok{background:var(--ok-soft)}
+.fb-no{background:var(--no-soft)}
+.fb b{font-weight:700}
+.pager{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:32px;padding-top:16px;border-top:1px solid var(--line)}
+.pager span{color:var(--muted);font-variant-numeric:tabular-nums}
+.btn{font:inherit;font-weight:600;padding:10px 18px;border-radius:10px;border:1.5px solid var(--accent);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.4;cursor:default}
+.linkbtn{font:inherit;background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+svg text{font-family:var(--font-body);font-size:16px;fill:var(--ink)}
+svg text.muted{fill:var(--muted)}
+svg text.acc{fill:var(--accent);font-weight:600}
+svg text.r2{fill:var(--ray2);font-weight:600}
+svg text.big{font-size:20px;font-weight:600}
+svg text.math{font-family:var(--font-math);font-size:20px;font-style:italic}
+svg .axis{stroke:var(--line);stroke-width:1.5;fill:none}
+svg .grid{stroke:var(--line);stroke-width:1;fill:none}
+svg .w{fill:none;stroke-width:2.6;stroke-linejoin:round}
+svg .w1{stroke:var(--accent)}
+svg .w2{stroke:var(--ray2)}
+svg .ws{stroke:var(--ink);stroke-width:3.2}
+svg .glass{fill:var(--glass);stroke:var(--glass-edge);stroke-width:1.5}
+svg .ray1{stroke:var(--accent);stroke-width:3;fill:none}
+svg .ray2{stroke:var(--ray2);stroke-width:3;fill:none}
+svg .ink{stroke:var(--ink);stroke-width:2;fill:none}
+svg .thin{stroke:var(--ink);stroke-width:2;fill:none}
+svg .thick{stroke:var(--ink);stroke-width:8;fill:none;stroke-linecap:round}
+svg .pulse{stroke:var(--muted);stroke-width:3;fill:none}
+svg .pulse-acc{stroke:var(--accent);stroke-width:3.5;fill:none}
+svg .dash{stroke:var(--muted);stroke-dasharray:6 6;fill:none;stroke-width:1.5}
+svg .dimline{stroke:var(--accent);stroke-width:2.5;fill:none}
+svg .dot{fill:var(--ink)}
+svg .acc-fill{fill:var(--accent)}
+svg .r2-fill{fill:var(--ray2)}
+svg .surface-fill{fill:var(--surface)}
+svg .ring{fill:none;stroke:var(--accent);stroke-width:2}
+svg .ring-faint{fill:none;stroke:var(--muted);stroke-width:1.5}
+svg .pt{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+svg .fit{stroke:var(--accent);stroke-width:2.5;fill:none}
+svg .fit0{stroke:var(--muted);stroke-width:2;stroke-dasharray:6 5;fill:none}
+.mk-ink{fill:var(--ink)} .mk-acc{fill:var(--accent)} .mk-r2{fill:var(--ray2)}
+.tbl-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+th{font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.row-hl td{background:var(--accent-soft)}
+.legend{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:.95rem}
+.legend li{display:flex;gap:10px;align-items:baseline}
+.sw{display:inline-block;width:22px;height:4px;border-radius:2px;flex:0 0 auto;transform:translateY(-3px)}
+.sw-1{background:var(--accent)} .sw-2{background:var(--ray2)}
+.pair{display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.pair > .fig-scroll{flex:1 1 360px;min-width:0}
+.pair > .topview{flex:0 0 170px}
+.topview svg{display:block;width:170px;height:auto}
+.sim{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:720px){.sim{grid-template-columns:minmax(0,1fr)}}
+.screen{width:100%;max-width:380px;border-radius:12px;overflow:hidden;background:#000000;border:1px solid var(--line)}
+#rings{display:block;width:100%;height:auto}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.preset{font:inherit;font-size:.875rem;padding:4px 12px;border-radius:999px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.preset:hover{border-color:var(--accent)}
+.swatch{display:inline-block;width:14px;height:14px;border-radius:50%;vertical-align:-2px;border:1px solid var(--line);margin-right:4px}
+.radios{display:flex;flex-wrap:wrap;gap:6px 18px}
+.radios label{font-weight:400;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.radios input{accent-color:var(--accent)}
+select{font:inherit;padding:5px 8px;border-radius:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+.note{font-size:.875rem;color:var(--muted);margin:0}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px}
+fieldset{border:1px solid var(--line);border-radius:12px;padding:14px;margin:0;min-width:0;display:grid;gap:10px;background:var(--surface)}
+legend{font-weight:700;padding:0 6px;font-family:var(--font-display);font-size:1.05rem}
+.field{display:grid;grid-template-columns:minmax(0,1fr) 112px;align-items:center;gap:8px}
+.field label{font-size:.95rem}
+.field input{font:inherit;padding:6px 8px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%;font-variant-numeric:tabular-nums}
+.out{background:var(--bg);border-radius:10px;padding:10px 12px;font-variant-numeric:tabular-nums;display:grid;gap:4px}
+.out p{margin:0}
+.out .big{font-size:1.15rem;font-weight:700}
+.out .err{color:var(--no);font-weight:600}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:12px;align-items:stretch}
+.flow .card{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--surface)}
+.flow .card h3{font-family:var(--font-display);font-size:1.1rem;margin:0 0 6px}
+.flow .card ol{margin:0;padding-left:1.2em}
+.flow .card li{margin-bottom:4px}
+.flow .arrow{align-self:center;font-size:1.6rem;color:var(--accent);font-weight:700}
+@media (max-width:640px){.flow{grid-template-columns:minmax(0,1fr)}.flow .arrow{justify-self:center;transform:rotate(90deg)}}
+.qa{display:flex;flex-direction:column;gap:8px;max-width:76ch}
+details{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:0 14px}
+summary{cursor:pointer;padding:12px 0;font-weight:600}
+details[open] summary{border-bottom:1px solid var(--line);margin-bottom:10px}
+details > div{padding-bottom:12px}
+details p{margin:0 0 8px}
+details p:last-child{margin-bottom:0}
+.warn{border:1.5px solid var(--no);border-radius:12px;padding:14px 16px;max-width:76ch;background:var(--surface)}
+.warn h3{margin:0 0 8px;font-family:var(--font-display);font-size:1.1rem}
+.warn ul{margin:0;padding-left:1.2em}
+.warn li{margin-bottom:6px}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Newton Halkaları</h1>
+      <p>Dalgalar Lab föyü, s.15–24 · adım adım, görselli çalışma</p>
+    </div>
+    <span class="lamtag"><i>r</i>² = (<i>m</i> + ½) <i>λ R</i></span>
+  </header>
+
+  <div class="layout">
+    <nav class="steps" aria-label="Adımlar">
+      <ol id="stepList">
+        <li><button type="button" data-go="1"><span class="n">1</span><span>Işık bir dalga</span></button></li>
+        <li><button type="button" data-go="2"><span class="n">2</span><span>Yansıyınca ters dönme</span></button></li>
+        <li><button type="button" data-go="3"><span class="n">3</span><span>Mercek + düz cam</span></button></li>
+        <li><button type="button" data-go="4"><span class="n">4</span><span>Girişen iki ışın</span></button></li>
+        <li><button type="button" data-go="5"><span class="n">5</span><span>Aydınlık mı, karanlık mı?</span></button></li>
+        <li><button type="button" data-go="6"><span class="n">6</span><span>d = r²/2R</span></button></li>
+        <li><button type="button" data-go="7"><span class="n">7</span><span>Ana formül + simülasyon</span></button></li>
+        <li><button type="button" data-go="8"><span class="n">8</span><span>Perde ve büyütme</span></button></li>
+        <li><button type="button" data-go="9"><span class="n">9</span><span>Deneyin iki aşaması</span></button></li>
+        <li><button type="button" data-go="10"><span class="n">10</span><span>Grafik yöntemi</span></button></li>
+        <li><button type="button" data-go="11"><span class="n">11</span><span>Föyün soruları</span></button></li>
+      </ol>
+    </nav>
+
+    <main id="main">
+
+<!-- ============ ADIM 1 ============ -->
+<section class="step" data-step="1" id="adim-1" aria-labelledby="t1">
+  <div class="head">
+    <p class="eyebrow">Adım 1 / 11</p>
+    <h2 id="t1">Işık bir dalgadır</h2>
+    <p class="lead">Her şey buradan başlıyor: iki ışık dalgası aynı yere gelince toplanır.</p>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg id="wave1" viewBox="0 0 600 300" role="img" aria-label="Dalga 1, kaydırılabilen Dalga 2 ve ikisinin toplamı">
+        <line class="axis" x1="100" y1="55" x2="590" y2="55"/>
+        <line class="axis" x1="100" y1="140" x2="590" y2="140"/>
+        <line class="axis" x1="100" y1="240" x2="590" y2="240"/>
+        <text class="acc" x="8" y="61">Dalga 1</text>
+        <text class="r2" x="8" y="146">Dalga 2</text>
+        <text x="8" y="246" style="font-weight:600">Toplam</text>
+        <path class="w w1"/>
+        <path class="w w2"/>
+        <path class="w ws"/>
+      </svg>
+    </div>
+    <div class="controls">
+      <label for="s1shift">Dalga 2'yi kaydır: <output id="s1val" for="s1shift">0 λ</output></label>
+      <input type="range" id="s1shift" min="0" max="1" step="0.05" value="0">
+      <p class="result">Sonuç: <span class="chip aydinlik" id="s1chip">AYDINLIK · yapıcı girişim</span></p>
+    </div>
+    <figcaption>Kaydırıcıyı yavaşça sağa çek. ½λ'da alttaki toplam dalga dümdüz olur.</figcaption>
+  </figure>
+  <div class="prose">
+    <ul>
+      <li>Işığı denizdeki dalga gibi düşün: tepeleri ve çukurları var.</li>
+      <li>Bir tepeden sonraki tepeye kadar olan mesafeye <strong>dalga boyu</strong> denir, sembolü <span class="f"><i>λ</i></span> (lamda).</li>
+      <li><strong>Tepe tepeye</strong> denk gelirse dalgalar birbirini büyütür: <strong>aydınlık</strong>.</li>
+      <li><strong>Tepe çukura</strong> denk gelirse dalgalar birbirini siler: <strong>karanlık</strong>.</li>
+      <li>Bu üst üste binme olayına <strong>girişim</strong> denir.</li>
+    </ul>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p>Kayma <strong>0, 1λ, 2λ …</strong> (tam katlar) → <strong>AYDINLIK</strong></p>
+    <p>Kayma <strong>½λ, 1½λ, 2½λ …</strong> (yarım katlar) → <strong>KARANLIK</strong></p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">İki dalga arasındaki kayma tam 1λ olursa ne görürsün?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="dogru">Aydınlık</button>
+      <button type="button" class="opt" data-opt="yanlis">Karanlık</button>
+      <button type="button" class="opt" data-opt="yanlis">Yarı aydınlık</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Bir tam dalga kaymak hiç kaymamak gibidir; tepeler yine tepelerle buluşur.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> Kaydırıcıyı en sağa (1λ) getir: tepeler yine tepelerle buluşuyor mu?</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 2 ============ -->
+<section class="step" data-step="2" id="adim-2" aria-labelledby="t2" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 2 / 11</p>
+    <h2 id="t2">Yansıyınca ters dönme</h2>
+    <p class="lead">Işık bir yüzeyden yansırken bazen ters döner. Newton halkalarının bütün sırrı bu.</p>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg viewBox="0 0 600 270" role="img" aria-label="İp benzetmesi: hafif ipten ağır ipe giden atma ters döner, ağır ipten hafif ipe giden düz döner">
+        <defs>
+          <marker id="aInk" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-ink" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="aAcc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-acc" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <!-- Satır 1: hafif → ağır -->
+        <text x="20" y="26" style="font-weight:600">Föydeki B: hafif ipten ağır ipe</text>
+        <path class="thin" d="M20,95 L330,95"/>
+        <path class="thick" d="M330,95 L580,95"/>
+        <path class="pulse" d="M80,95 C96,95 98,62 110,62 C122,62 124,95 140,95"/>
+        <path class="ink" d="M95,50 L135,50" marker-end="url(#aInk)"/>
+        <text class="muted" x="62" y="128">gelen</text>
+        <path class="pulse-acc" d="M210,95 C226,95 228,128 240,128 C252,128 254,95 270,95"/>
+        <path class="ray1" d="M265,145 L220,145" marker-end="url(#aAcc)"/>
+        <text class="acc" x="196" y="72">yansıyan</text>
+        <text x="360" y="70" style="font-weight:600">→ TERS döndü</text>
+        <text class="muted" x="360" y="130">ağır ip = yoğun ortam</text>
+        <!-- Satır 2: ağır → hafif -->
+        <text x="20" y="176" style="font-weight:600">Föydeki A: ağır ipten hafif ipe</text>
+        <path class="thick" d="M20,240 L330,240"/>
+        <path class="thin" d="M330,240 L580,240"/>
+        <path class="pulse" d="M80,240 C96,240 98,207 110,207 C122,207 124,240 140,240"/>
+        <path class="ink" d="M95,195 L135,195" marker-end="url(#aInk)"/>
+        <text class="muted" x="150" y="214">gelen</text>
+        <path class="pulse-acc" d="M210,240 C226,240 228,207 240,207 C252,207 254,240 270,240"/>
+        <path class="ray1" d="M265,195 L220,195" marker-end="url(#aAcc)"/>
+        <text class="acc" x="272" y="214">yansıyan</text>
+        <text x="360" y="214" style="font-weight:600">→ DÜZ döndü</text>
+      </svg>
+    </div>
+    <figcaption>Föy s.15–16'daki ip örneği. İnce çizgi hafif ip, kalın çizgi ağır ip.</figcaption>
+  </figure>
+  <div class="prose">
+    <ul>
+      <li>İnce bir ip kalın bir ipe bağlı olsun. İpte bir atma (tümsek) gönderelim.</li>
+      <li><strong>Hafif ipten</strong> gelen atma ağır ipe çarparsa <strong>ters döner</strong> (tümsek çukur olur).</li>
+      <li><strong>Ağır ipten</strong> gelen atma hafif ipe çarparsa <strong>düz döner</strong>.</li>
+      <li>Işıkta "ağır ip" yerine <strong>daha yoğun ortam</strong> düşün: kırma indisi büyük olan. Cam (n ≈ 1,5) havadan (n = 1) yoğundur.</li>
+      <li>Ters dönmek, dalganın <strong>yarım dalga boyu (½λ) kayması</strong> demektir. Föy buna "π kadar faz farkı" diyor. İkisi aynı şey.</li>
+    </ul>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p><strong>Hava → cam</strong> yüzeyinden yansıma: <strong>TERS döner</strong> (+½λ)</p>
+    <p><strong>Cam → hava</strong> yüzeyinden yansıma: <strong>DÜZ döner</strong> (kayma yok)</p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">Işık camın içinden geliyor ve havaya bakan yüzeyden yansıyor. Ters döner mi?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="yanlis">Evet, ters döner</button>
+      <button type="button" class="opt" data-opt="dogru">Hayır, düz döner</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Cam → hava, yoğundan az yoğuna gidiyor. Ağır ipten hafif ipe giden atma gibi düz döner.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> Sadece <em>daha yoğun</em> ortama çarpınca ters döner. Hava, camdan az yoğundur.</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 3 ============ -->
+<section class="step" data-step="3" id="adim-3" aria-labelledby="t3" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 3 / 11</p>
+    <h2 id="t3">Mercek + düz cam = incecik hava tabakası</h2>
+    <p class="lead">Bir yüzü tümsek merceği düz bir camın üstüne koyuyoruz. Aralarında çok ince bir hava tabakası kalıyor.</p>
+  </div>
+  <figure class="bench">
+    <div class="pair">
+      <div class="fig-scroll">
+        <svg id="lensSvg" viewBox="0 88 600 186" role="img" aria-label="Yandan kesit: tümsek mercek düz camın üstünde, aradaki hava kalınlığı d">
+          <path class="glass" d="M40,120 L560,120 L560,140 Q300,260 40,140 Z"/>
+          <rect class="glass" x="20" y="200" width="560" height="50"/>
+          <text x="52" y="110" class="muted">Mercek (tümsek yüzü aşağıda)</text>
+          <text x="32" y="232" class="muted">Düz cam</text>
+          <circle class="dot" cx="300" cy="200" r="4"/>
+          <text x="292" y="268" class="muted">T</text>
+          <line class="dimline" id="dR" x1="430" y1="182" x2="430" y2="200"/>
+          <line class="dimline" id="dL" x1="170" y1="182" x2="170" y2="200"/>
+          <text class="acc" id="dLabel" x="440" y="196">d</text>
+          <line class="dash" id="rLine" x1="300" y1="210" x2="430" y2="210"/>
+          <text id="rLabel" x="360" y="228" style="font-weight:600">r</text>
+        </svg>
+      </div>
+      <div class="topview">
+        <svg viewBox="0 0 200 214" role="img" aria-label="Üstten bakış: aynı kalınlıktaki noktalar bir çember oluşturur">
+          <circle class="ring-faint" cx="100" cy="96" r="88"/>
+          <circle class="ring" id="topRing" cx="100" cy="96" r="40"/>
+          <circle class="dot" cx="100" cy="96" r="3.5"/>
+          <text x="100" y="208" class="muted" text-anchor="middle" style="font-size:14px">üstten bakış</text>
+        </svg>
+      </div>
+    </div>
+    <div class="controls">
+      <label for="s3r">Merkezden uzaklık r: <output id="s3rVal" for="s3r">1,5 mm</output></label>
+      <input type="range" id="s3r" min="0" max="3" step="0.1" value="1.5">
+      <p class="result" id="s3out">Hava kalınlığı d ≈ 0,56 μm</p>
+    </div>
+    <figcaption>Çizim abartılı. R = 2 m'lik bir mercek için gerçek kalınlık mikron (μm) seviyesinde; saç teli bunun yaklaşık 100 katı kalın.</figcaption>
+  </figure>
+  <div class="prose">
+    <ul>
+      <li>Mercek ile cam tam ortada <strong>tek bir noktada</strong> değer: <strong>T noktası</strong>. Orada hava kalınlığı <span class="f"><i>d</i> = 0</span>.</li>
+      <li>Ortadan dışarı gittikçe mercek camdan uzaklaşır, hava tabakası <strong>kalınlaşır</strong>.</li>
+      <li>Merkezden aynı uzaklıktaki (aynı <span class="f"><i>r</i></span>) her noktada kalınlık aynıdır, çünkü mercek yuvarlak.</li>
+      <li>Kalınlığı aynı olan yerler aynı görünür. Bu yerler bir <strong>çember</strong> çizer. Halkaların halka olmasının sebebi bu.</li>
+    </ul>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p>Merkezde <strong>d = 0</strong>. Dışa doğru d büyür. <strong>Aynı d → aynı halka.</strong></p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">Girişim deseni neden düz çizgiler değil de halkalar şeklinde?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="dogru">Mercek yuvarlak; merkezden aynı uzaklıktaki her yerde hava kalınlığı aynı</button>
+      <button type="button" class="opt" data-opt="yanlis">Işık kaynağı yuvarlak olduğu için</button>
+      <button type="button" class="opt" data-opt="yanlis">Perde yuvarlak olduğu için</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Halka = aynı kalınlıktaki noktaların birleşimi. Föy bunları "eşit kalınlık" saçakları olarak anlatıyor.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> Kaydırıcıyı oynat: sağdaki ve soldaki d aynı. Üstten bakınca o noktalar ne çiziyor?</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 4 ============ -->
+<section class="step" data-step="4" id="adim-4" aria-labelledby="t4" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 4 / 11</p>
+    <h2 id="t4">Hangi iki ışın girişiyor?</h2>
+    <p class="lead">Yukarıdan gelen ışık ikiye ayrılır, sonra bu iki parça yeniden buluşur.</p>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg viewBox="0 0 640 310" role="img" aria-label="Yakın plan: ışın 1 merceğin alt yüzeyinden, ışın 2 alttaki camdan yansır">
+        <defs>
+          <marker id="bInk" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk-ink" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="bAcc" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk-acc" d="M0,0 L10,5 L0,10 z"/></marker>
+          <marker id="bR2" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk-r2" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <rect class="glass" x="20" y="30" width="600" height="120"/>
+        <rect class="glass" x="20" y="210" width="600" height="80"/>
+        <text x="32" y="56" class="muted">Mercek (cam)</text>
+        <text x="32" y="186" class="muted">hava</text>
+        <text x="32" y="272" class="muted">Düz cam</text>
+        <!-- gelen -->
+        <path class="ink" d="M150,30 L230,150"/>
+        <path class="ink" d="M150,30 L192,93" marker-end="url(#bInk)"/>
+        <text x="96" y="22">gelen ışık</text>
+        <!-- ışın 1 -->
+        <path class="ray1" d="M230,150 L321,30"/>
+        <path class="ray1" d="M230,150 L281,83" marker-end="url(#bAcc)"/>
+        <text class="acc big" x="326" y="24">1</text>
+        <!-- ışın 2 -->
+        <path class="ray2" d="M230,150 L270,210 L310,150 L401,30"/>
+        <path class="ray2" d="M310,150 L361,83" marker-end="url(#bR2)"/>
+        <text class="r2 big" x="406" y="24">2</text>
+        <circle class="dot" cx="230" cy="150" r="4"/>
+        <circle class="dot" cx="270" cy="210" r="4"/>
+        <text x="206" y="172" style="font-weight:600">A</text>
+        <text x="262" y="236" style="font-weight:600">B</text>
+        <text class="r2" x="330" y="188">fazladan yol ≈ 2d</text>
+        <!-- d ölçüsü -->
+        <line class="dimline" x1="596" y1="152" x2="596" y2="208"/>
+        <line class="dimline" x1="586" y1="150" x2="606" y2="150"/>
+        <line class="dimline" x1="586" y1="210" x2="606" y2="210"/>
+        <text class="acc big" x="576" y="187" text-anchor="end">d</text>
+      </svg>
+    </div>
+    <ul class="legend">
+      <li><span class="sw sw-1"></span><span><strong>Işın 1</strong>, A noktasında merceğin alt yüzeyinden yansır. Cam → hava: <strong>düz döner</strong>.</span></li>
+      <li><span class="sw sw-2"></span><span><strong>Işın 2</strong>, havayı geçer, B noktasında alttaki camdan yansır. Hava → cam: <strong>ters döner (+½λ)</strong>.</span></li>
+    </ul>
+    <figcaption>Işınlar ayrı görünsün diye eğik çizildi. Deneyde ışık dik gelir (föydeki cosφ′ = 1), bu yüzden fazladan yol tam 2d olur.</figcaption>
+  </figure>
+  <div class="prose">
+    <ul>
+      <li>Yansıtıcı cam sayesinde ışık merceğe <strong>dik</strong> gelir.</li>
+      <li><strong>Işın 1</strong> merceğin alt yüzeyinden geri döner. Yansıma cam → hava olduğu için ters dönmez.</li>
+      <li><strong>Işın 2</strong> hava boşluğuna girer, alttaki camdan geri döner. Yansıma hava → cam olduğu için <strong>ters döner</strong>, yani ½λ kayar.</li>
+      <li>Işın 2 hava boşluğunu hem iner hem çıkar. Bu yüzden ışın 1'den <strong>2d</strong> fazla yol gider.</li>
+      <li>İki ışın yukarıda buluşur ve girişim yapar.</li>
+    </ul>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p class="formula" style="margin:0"><span>Toplam fark = 2<i>d</i> + ½<i>λ</i></span></p>
+    <p>2d yoldan gelir, ½λ ters dönmeden gelir.</p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">Işın 2 neden fazladan d değil de 2d yol gidiyor?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="dogru">Hava boşluğunu hem inerken hem çıkarken geçiyor</button>
+      <button type="button" class="opt" data-opt="yanlis">Ters döndüğü için yol iki katına çıkıyor</button>
+      <button type="button" class="opt" data-opt="yanlis">Havada iki kat yavaş gidiyor</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Bir iniş (d) + bir çıkış (d) = 2d. Ters dönme ise ayrıca ½λ ekler.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> Mavi ışını takip et: hava katmanını kaç kez geçiyor?</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 5 ============ -->
+<section class="step" data-step="5" id="adim-5" aria-labelledby="t5" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 5 / 11</p>
+    <h2 id="t5">Aydınlık mı, karanlık mı?</h2>
+    <p class="lead">Adım 1'deki kuralı Adım 4'teki farka uyguluyoruz. Hepsi bu kadar.</p>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg id="wave5" viewBox="0 0 600 300" role="img" aria-label="Işın 1, Işın 2 ve toplamları; hava kalınlığı değiştikçe sonuç değişir">
+        <line class="axis" x1="100" y1="55" x2="590" y2="55"/>
+        <line class="axis" x1="100" y1="140" x2="590" y2="140"/>
+        <line class="axis" x1="100" y1="240" x2="590" y2="240"/>
+        <text class="acc" x="8" y="61">Işın 1</text>
+        <text class="r2" x="8" y="146">Işın 2</text>
+        <text x="8" y="246" style="font-weight:600">Toplam</text>
+        <path class="w w1"/>
+        <path class="w w2"/>
+        <path class="w ws"/>
+      </svg>
+    </div>
+    <div class="controls">
+      <label for="s5d">Hava kalınlığı d: <output id="s5dVal" for="s5d">0</output></label>
+      <input type="range" id="s5d" min="0" max="1.25" step="0.0625" value="0">
+      <p class="result" id="s5calc">2d = 0 · ters dönme = +½λ · toplam fark = ½λ</p>
+      <p class="result"><span class="chip karanlik" id="s5chip">KARANLIK</span> <span id="s5ring">Merkezdeki karanlık nokta (m = 0)</span></p>
+    </div>
+  </figure>
+  <div class="prose">
+    <p>Toplam fark <span class="f">2<i>d</i> + ½<i>λ</i></span>. Adım 1'deki kuralı uygula:</p>
+    <ul>
+      <li><strong>Karanlık:</strong> fark yarım kat olmalı (½λ, 1½λ, …). O zaman 2d = 0, λ, 2λ … yani <span class="f">2<i>d</i> = <i>mλ</i></span></li>
+      <li><strong>Aydınlık:</strong> fark tam kat olmalı (λ, 2λ, …). O zaman 2d = ½λ, 1½λ … yani <span class="f">2<i>d</i> = (<i>m</i> + ½)<i>λ</i></span></li>
+      <li><span class="f"><i>m</i></span> = 0, 1, 2, … halkanın sıra numarası.</li>
+    </ul>
+  </div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Kalınlık d</th><th>2d</th><th>Toplam fark</th><th>Sonuç</th><th>Hangisi?</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>0</td><td>½λ</td><td>karanlık</td><td>merkez (m = 0)</td></tr>
+        <tr><td>¼λ</td><td>½λ</td><td>1λ</td><td>aydınlık</td><td>1. aydınlık halka (m = 0)</td></tr>
+        <tr><td>½λ</td><td>1λ</td><td>1½λ</td><td>karanlık</td><td>1. karanlık halka (m = 1)</td></tr>
+        <tr><td>¾λ</td><td>1½λ</td><td>2λ</td><td>aydınlık</td><td>2. aydınlık halka (m = 1)</td></tr>
+        <tr><td>1λ</td><td>2λ</td><td>2½λ</td><td>karanlık</td><td>2. karanlık halka (m = 2)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p class="formula" style="margin:0"><span>Karanlık: 2<i>d</i> = <i>mλ</i></span><span>Aydınlık: 2<i>d</i> = (<i>m</i> + ½)<i>λ</i></span></p>
+    <p><strong>Merkez karanlıktır:</strong> d = 0 iken geriye sadece ters dönmeden gelen ½λ kalır.</p>
+    <p>Bir halkadan sonrakine geçince d, <strong>½λ</strong> artar. (Föy s.19'da "λ kadar" yazıyor; doğrusu ½λ.)</p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">Hava kalınlığının d = ½λ olduğu yerde ne görürsün?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="yanlis">Aydınlık</button>
+      <button type="button" class="opt" data-opt="dogru">Karanlık</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> 2d = λ, toplam fark = λ + ½λ = 1½λ, yani yarım kat. Bu, 1. karanlık halka (m = 1).</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> 2d'yi bul, ½λ ekle. Sonuç tam kat mı, yarım kat mı? Kaydırıcıyı ½λ'ya getirip kontrol et.</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 6 ============ -->
+<section class="step" data-step="6" id="adim-6" aria-labelledby="t6" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 6 / 11</p>
+    <h2 id="t6">Kalınlığı yarıçaptan bulmak: d = r²/2R</h2>
+    <p class="lead">d'yi ölçemeyiz ama halkanın yarıçapı r'yi ölçebiliriz. İkisini Pisagor bağlıyor.</p>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg viewBox="0 0 600 385" role="img" aria-label="Geometri: küre merkezi O, yarıçap R, yatay r, dikey R eksi d, hava kalınlığı d">
+        <circle class="dash" cx="300" cy="30" r="300"/>
+        <path class="glass" d="M130,225 L470,225 L470,277.2 A300,300 0 0 1 130,277.2 Z"/>
+        <rect class="glass" x="60" y="330" width="480" height="30"/>
+        <line class="ink" x1="300" y1="30" x2="470" y2="277.2"/>
+        <line class="ink" x1="300" y1="30" x2="300" y2="277.2"/>
+        <line class="ink" x1="300" y1="277.2" x2="470" y2="277.2"/>
+        <path class="ink" d="M300,265 L312,265 L312,277.2" style="stroke-width:1.5"/>
+        <line class="dimline" x1="470" y1="277.2" x2="470" y2="330"/>
+        <circle class="dot" cx="300" cy="30" r="4.5"/>
+        <circle class="dot" cx="300" cy="330" r="4"/>
+        <circle class="dot" cx="470" cy="277.2" r="4"/>
+        <text x="312" y="36" style="font-weight:600">O</text>
+        <text class="muted" x="330" y="36">(kürenin merkezi)</text>
+        <text class="math" x="398" y="150">R</text>
+        <text class="math" x="290" y="160" text-anchor="end">R − d</text>
+        <text class="math" x="380" y="268">r</text>
+        <text class="math acc" x="482" y="310" style="fill:var(--accent)">d</text>
+        <text x="300" y="380" text-anchor="middle" style="font-weight:600">T</text>
+        <text class="muted" x="140" y="250">mercek</text>
+        <text class="muted" x="72" y="352">düz cam</text>
+      </svg>
+    </div>
+    <figcaption>Merceğin tümsek yüzü, yarıçapı R olan büyük bir kürenin küçük bir parçası. d burada abartılı çizildi.</figcaption>
+  </figure>
+  <div class="prose">
+    <ol>
+      <li>Şekildeki dik üçgenin hipotenüsü <span class="f"><i>R</i></span>, dik kenarları <span class="f"><i>r</i></span> ve <span class="f"><i>R</i> − <i>d</i></span>.</li>
+      <li>Pisagor: <span class="f"><i>R</i>² = <i>r</i>² + (<i>R</i> − <i>d</i>)²</span></li>
+      <li>Parantezi aç: <span class="f"><i>R</i>² = <i>r</i>² + <i>R</i>² − 2<i>Rd</i> + <i>d</i>²</span></li>
+      <li>İki taraftaki R²'ler sadeleşir: <span class="f">0 = <i>r</i>² − 2<i>Rd</i> + <i>d</i>²</span></li>
+      <li>d zaten mikron seviyesinde. d² ise hiç denecek kadar küçük, onu atıyoruz.</li>
+      <li>Sonuç: <span class="f"><i>r</i>² = 2<i>Rd</i></span>, yani <span class="f"><i>d</i> = <i>r</i>² / 2<i>R</i></span></li>
+    </ol>
+    <p><strong>Sayıyla deneyelim:</strong> R = 2 m, r = 1 mm olsun. d = (0,001)² / (2 × 2) = 0,25 μm. Bu, ışığın dalga boyunun yaklaşık yarısı. Halkaların görünmesi bu yüzden.</p>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p class="formula" style="margin:0"><span><i>d</i> = <i>r</i>² / 2<i>R</i></span></p>
+    <p>d küçük olduğu için d² atılır. Föy bunu "d ≪ R olduğundan" diye yazıyor.</p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">r iki katına çıkarsa hava kalınlığı d kaç katına çıkar?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="yanlis">2 katına</button>
+      <button type="button" class="opt" data-opt="dogru">4 katına</button>
+      <button type="button" class="opt" data-opt="yanlis">Değişmez</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> d, r'nin karesiyle büyür: (2r)² = 4r². Dışa doğru halkaların sıklaşması da bundan.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> d = r²/2R formülünde r yerine 2r yaz.</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 7 ============ -->
+<section class="step" data-step="7" id="adim-7" aria-labelledby="t7" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 7 / 11</p>
+    <h2 id="t7">Ana formül: r² = (m + ½)λR</h2>
+    <p class="lead">Adım 5 ile Adım 6'yı birleştirince deneyin formülü çıkıyor.</p>
+  </div>
+  <div class="prose">
+    <ol>
+      <li>Aydınlık koşulu: <span class="f">2<i>d</i> = (<i>m</i> + ½)<i>λ</i></span></li>
+      <li>d yerine <span class="f"><i>r</i>²/2<i>R</i></span> koy: <span class="f">2 · <i>r</i>²/2<i>R</i> = (<i>m</i> + ½)<i>λ</i></span></li>
+      <li>2'ler sadeleşir: <span class="f"><i>r</i>² / <i>R</i> = (<i>m</i> + ½)<i>λ</i></span></li>
+    </ol>
+  </div>
+  <div class="keep">
+    <span class="k">Ezberle</span>
+    <p class="formula" style="margin:0">
+      <span>Aydınlık: <i>r</i>² = (<i>m</i> + ½)<i>λR</i></span>
+      <span>Karanlık: <i>r</i>² = <i>mλR</i></span>
+    </p>
+    <p><strong>Dikkat:</strong> İlk aydınlık halka <strong>m = 0</strong>. 2. aydınlık m = 1, 3. aydınlık m = 2 … Föydeki örnek: 15. aydınlık halka için m = 14, buradan λ = 2r²/29R.</p>
+  </div>
+  <figure class="bench">
+    <div class="sim">
+      <div class="screen"><canvas id="rings" width="380" height="380" role="img" aria-label="Seçilen dalga boyu ve eğrilik yarıçapı için Newton halkaları simülasyonu"></canvas></div>
+      <div class="controls">
+        <div class="radios" role="radiogroup" aria-label="Işık türü">
+          <label><input type="radio" name="mode" id="modeMono" value="mono" checked> Tek renk (süzgeçli)</label>
+          <label><input type="radio" name="mode" id="modeWhite" value="white"> Beyaz ışık</label>
+        </div>
+        <label for="lam">Dalga boyu λ: <output id="lamVal" for="lam">589 nm</output></label>
+        <input type="range" id="lam" min="400" max="700" step="1" value="589">
+        <div class="presets">
+          <button type="button" class="preset" data-lam="450">Mavi 450</button>
+          <button type="button" class="preset" data-lam="546">Yeşil 546</button>
+          <button type="button" class="preset" data-lam="589">Sodyum 589</button>
+          <button type="button" class="preset" data-lam="633">Kırmızı 633</button>
+        </div>
+        <label for="radR">Eğrilik yarıçapı R: <output id="radRVal" for="radR">2,0 m</output></label>
+        <input type="range" id="radR" min="1" max="5" step="0.1" value="2">
+        <label for="hl">Kesikli çemberle göster:
+          <select id="hl">
+            <option value="-1">hiçbiri</option>
+            <option value="0" selected>1. aydınlık (m = 0)</option>
+            <option value="1">2. aydınlık (m = 1)</option>
+            <option value="2">3. aydınlık (m = 2)</option>
+            <option value="3">4. aydınlık (m = 3)</option>
+            <option value="4">5. aydınlık (m = 4)</option>
+          </select>
+        </label>
+        <div class="tbl-wrap">
+          <table id="ringTable">
+            <thead><tr><th>Aydınlık halka</th><th>m</th><th>r (mm)</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="note" id="simNote">Görüntü merkezden ±3 mm'lik alanı gösteriyor (perdedeki büyütülmüş hali değil, gerçek boyut).</p>
+      </div>
+    </div>
+  </figure>
+  <div class="prose">
+    <p><strong>Simülasyonda dene:</strong></p>
+    <ul>
+      <li>λ'yı büyüt (kırmızıya git): halkalar <strong>büyür</strong>. Çünkü r² ∝ λ.</li>
+      <li>R'yi büyüt: halkalar yine büyür. Daha düz mercek, daha geniş halka.</li>
+      <li>Dışa doğru halkalar <strong>sıklaşır</strong>. r, √m ile büyüdüğü için.</li>
+      <li>"Beyaz ışık" seç: her renk farklı yerde halka yapar. Birkaç halkadan sonra renkler karışıp kaybolur. İçte mor, dışta kırmızı. (Föy soru 6)</li>
+    </ul>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">5. aydınlık halka için m kaçtır?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="yanlis">5</button>
+      <button type="button" class="opt" data-opt="dogru">4</button>
+      <button type="button" class="opt" data-opt="yanlis">6</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Sayma 0'dan başlıyor: 1. → 0, 2. → 1, … 5. → 4. Yani r² = 4,5 · λR.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> İlk aydınlık halka m = 0. Buna göre 5. halka kaç olur?</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 8 ============ -->
+<section class="step" data-step="8" id="adim-8" aria-labelledby="t8" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 8 / 11</p>
+    <h2 id="t8">Perdedeki halka gerçek boyutta değil</h2>
+    <p class="lead">Halkalar milimetre boyutunda. Onları bir mercekle büyütüp perdeye düşürüyoruz. Formüle koymadan önce bu büyütmeyi geri almalısın.</p>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg viewBox="0 0 680 260" role="img" aria-label="Newton düzeneği, odaklayıcı mercek M ve perde; P ve P′ uzaklıkları">
+        <defs>
+          <marker id="cInk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="mk-ink" d="M0,0 L10,5 L0,10 z"/></marker>
+        </defs>
+        <line class="dash" x1="60" y1="120" x2="520" y2="120"/>
+        <rect class="glass" x="30" y="80" width="30" height="80" rx="3"/>
+        <text x="20" y="182" class="muted">Newton</text>
+        <text x="20" y="200" class="muted">düzeneği</text>
+        <ellipse class="glass" cx="170" cy="120" rx="10" ry="62"/>
+        <text x="150" y="48" style="font-weight:600">M</text>
+        <rect class="glass" x="516" y="30" width="8" height="180"/>
+        <text x="500" y="22" style="font-weight:600">Perde</text>
+        <!-- ışınlar: cisim tepesi (60,110) -> görüntü (520,155) -->
+        <path class="ray1" d="M60,110 L170,120 L520,152"/>
+        <path class="ray1" d="M60,110 L170,110 L520,152" style="opacity:.55"/>
+        <line class="dimline" x1="60" y1="110" x2="60" y2="120" style="stroke-width:4"/>
+        <line class="dimline" x1="520" y1="120" x2="520" y2="152" style="stroke-width:4"/>
+        <text class="acc" x="70" y="104">c</text>
+        <text class="acc" x="530" y="142">g</text>
+        <!-- uzaklıklar -->
+        <line class="ink" x1="62" y1="232" x2="168" y2="232" marker-start="url(#cInk)" marker-end="url(#cInk)" style="stroke-width:1.5"/>
+        <line class="ink" x1="172" y1="232" x2="518" y2="232" marker-start="url(#cInk)" marker-end="url(#cInk)" style="stroke-width:1.5"/>
+        <text class="math" x="108" y="254">P</text>
+        <text class="math" x="336" y="254">P′</text>
+        <!-- yüzden görünüş -->
+        <circle class="ring-faint" cx="612" cy="120" r="14"/>
+        <circle class="ring-faint" cx="612" cy="120" r="26"/>
+        <circle class="ring" cx="612" cy="120" r="36"/>
+        <line class="dimline" x1="612" y1="120" x2="648" y2="120"/>
+        <text class="acc" x="624" y="112">g</text>
+        <text x="612" y="186" class="muted" text-anchor="middle" style="font-size:14px">perdede gördüğün</text>
+      </svg>
+    </div>
+    <figcaption>Mercek görüntüyü ters çevirir ve büyütür. Büyütme = P′/P. Föydeki bağıntı: c/g = P/P′.</figcaption>
+  </figure>
+  <div class="prose">
+    <ul>
+      <li><strong>c</strong>: düzenekteki <strong>gerçek</strong> halka yarıçapı. Formüldeki r bu.</li>
+      <li><strong>g</strong>: perdede cetvelle ölçtüğün yarıçap. c'den büyüktür.</li>
+      <li><strong>P</strong>: Newton düzeneği ile odaklayıcı mercek M arası. <strong>P′</strong>: mercek M ile perde arası.</li>
+      <li>Föydeki bağıntı <span class="f"><i>c</i>/<i>g</i> = <i>P</i>/<i>P</i>′</span>, buradan <span class="f"><i>c</i> = <i>g</i> × <i>P</i>/<i>P</i>′</span>.</li>
+    </ul>
+  </div>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p>Formüle her zaman <strong>c</strong>'yi (gerçek yarıçap) koy, g'yi değil. En sık yapılan hata bu.</p>
+    <p><strong>Laboratuvar ipucu:</strong> Merkezi tam bulmak zor. Perdede halkanın <strong>çapını</strong> (bir kenardan karşı kenara) ölç, ikiye böl.</p>
+  </div>
+  <fieldset>
+    <legend>Büyütme hesaplayıcı</legend>
+    <div class="field"><label for="c8g">Perdede ölçtüğün yarıçap g (mm)</label><input type="number" id="c8g" inputmode="decimal" step="any" min="0" value="12"></div>
+    <div class="field"><label for="c8P">P: düzenek → mercek (cm)</label><input type="number" id="c8P" inputmode="decimal" step="any" min="0" value="20"></div>
+    <div class="field"><label for="c8Pp">P′: mercek → perde (cm)</label><input type="number" id="c8Pp" inputmode="decimal" step="any" min="0" value="80"></div>
+    <div class="out" id="c8out" role="status"></div>
+  </fieldset>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">Perdede g = 12 mm ölçtün. P = 20 cm, P′ = 80 cm. Gerçek yarıçap c kaç?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="yanlis">48 mm</button>
+      <button type="button" class="opt" data-opt="dogru">3 mm</button>
+      <button type="button" class="opt" data-opt="yanlis">12 mm</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> c = 12 × 20/80 = 3 mm. Büyütme 4 kat; gerçek halka perdedekinin dörtte biri.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> Gerçek halka perdedekinden küçük olmalı. c = g × P/P′.</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 9 ============ -->
+<section class="step" data-step="9" id="adim-9" aria-labelledby="t9" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 9 / 11</p>
+    <h2 id="t9">Deneyin kendisi: iki aşama</h2>
+    <p class="lead">Önce merceği tanıyoruz (R'yi buluyoruz), sonra bilinmeyen ışığı ölçüyoruz (λ'yı buluyoruz).</p>
+  </div>
+  <div class="flow">
+    <div class="card">
+      <h3>Aşama A: R'yi bul</h3>
+      <ol>
+        <li>Dalga boyu <strong>bilinen</strong> süzgeci tak.</li>
+        <li>En az 5 halkanın g'sini ölç.</li>
+        <li>Her biri için c = g·P/P′.</li>
+        <li><span class="f"><i>R</i> = <i>c</i>² / (<i>m</i> + ½)<i>λ</i></span></li>
+        <li>Ortalamayı al: <strong>R<sub>ort</sub></strong></li>
+      </ol>
+    </div>
+    <div class="arrow" aria-hidden="true">→</div>
+    <div class="card">
+      <h3>Aşama B: λ'yı bul</h3>
+      <ol>
+        <li>Süzgeci <strong>değiştir</strong>.</li>
+        <li>Yine en az 5 halka ölç.</li>
+        <li>Her biri için c = g·P/P′.</li>
+        <li><span class="f"><i>λ</i> = <i>c</i>² / (<i>m</i> + ½)<i>R</i><sub>ort</sub></span></li>
+        <li>Ortalamayı al, süzgeçte yazanla kıyasla.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="calc">
+    <fieldset>
+      <legend>Aşama A · R hesabı</legend>
+      <div class="field"><label for="aLam">Bilinen λ (nm)</label><input type="number" id="aLam" inputmode="decimal" step="any" min="0" value="546"></div>
+      <div class="field"><label for="aM">Halka m (1. aydınlık = 0)</label><input type="number" id="aM" inputmode="numeric" step="1" min="0" value="2"></div>
+      <div class="field"><label for="aG">Perdede g (mm)</label><input type="number" id="aG" inputmode="decimal" step="any" min="0" value="10"></div>
+      <div class="field"><label for="aP">P (cm)</label><input type="number" id="aP" inputmode="decimal" step="any" min="0" value="20"></div>
+      <div class="field"><label for="aPp">P′ (cm)</label><input type="number" id="aPp" inputmode="decimal" step="any" min="0" value="100"></div>
+      <div class="out" id="aOut" role="status"></div>
+    </fieldset>
+    <fieldset>
+      <legend>Aşama B · λ hesabı</legend>
+      <div class="field"><label for="bM">Halka m</label><input type="number" id="bM" inputmode="numeric" step="1" min="0" value="2"></div>
+      <div class="field"><label for="bG">Perdede g (mm)</label><input type="number" id="bG" inputmode="decimal" step="any" min="0" value="10.8"></div>
+      <div class="field"><label for="bRef">Süzgeçte yazan λ (nm)</label><input type="number" id="bRef" inputmode="decimal" step="any" min="0" value="640"></div>
+      <p class="note">P ve P′ Aşama A'daki gibi kabul edildi (merceğe ve perdeye dokunmadın).</p>
+      <div class="out" id="bOut" role="status"></div>
+    </fieldset>
+  </div>
+  <p class="note">Kutulardaki sayılar örnek. Laboratuvarda kendi ölçümlerini yazıp sonucu kontrol edebilirsin.</p>
+  <div class="keep">
+    <span class="k">Akılda kalsın</span>
+    <p><strong>% hata</strong> = |λ<sub>ölçülen</sub> − λ<sub>süzgeç</sub>| / λ<sub>süzgeç</sub> × 100</p>
+    <p>Süzgeci değiştirirken <strong>merceğe ve perdeye dokunma</strong>. Dokunursan P ve P′'yi yeniden ölç.</p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">Süzgeci değiştirirken odaklayıcı merceği yanlışlıkla kaydırdın. Ne yapmalısın?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="dogru">Yeni P ve P′ değerlerini ölçüp onlarla hesaplamalıyım</button>
+      <button type="button" class="opt" data-opt="yanlis">Hiçbir şey, sonucu etkilemez</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Mercek kayınca büyütme (P′/P) değişir. Eski değerlerle hesaplarsan bütün c'ler yanlış çıkar.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> c = g·P/P′. Mercek kayınca P ve P′ değişmez mi?</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 10 ============ -->
+<section class="step" data-step="10" id="adim-10" aria-labelledby="t10" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 10 / 11</p>
+    <h2 id="t10">Grafik yöntemi neden daha iyi?</h2>
+    <p class="lead">Föy (madde 5) r²–m grafiği çizip eğimden λ bulmanı istiyor. Bu yöntemin neden daha iyi olduğunu kendin gör.</p>
+  </div>
+  <div class="prose">
+    <ul>
+      <li>Formülü aç: <span class="f"><i>r</i>² = <i>λR</i> · <i>m</i> + ½<i>λR</i></span>. Bu, bir doğrunun denklemi: y = eğim · x + kesişim.</li>
+      <li><strong>Eğim = λR</strong>, buradan <span class="f"><i>λ</i> = eğim / <i>R</i></span>.</li>
+      <li>Gerçekte mercek ile cam arasında <strong>toz</strong> olabilir ya da vidalar camı biraz <strong>bastırabilir</strong>. Bu, bütün r² değerlerini aynı miktarda kaydırır.</li>
+    </ul>
+  </div>
+  <figure class="bench">
+    <div class="fig-scroll">
+      <svg id="chart" viewBox="0 0 560 330" role="img" aria-label="r kare - m grafiği; noktalar, uydurulan doğru ve toz yokken çizilen kesikli doğru"></svg>
+    </div>
+    <div class="controls">
+      <label for="d0">Merkezdeki toz (+) ya da baskı (−): <output id="d0Val" for="d0">0,00 μm</output></label>
+      <input type="range" id="d0" min="-0.15" max="0.15" step="0.01" value="0">
+      <div class="out" id="chartOut" role="status"></div>
+    </div>
+    <figcaption>Örnek veriler: gerçek λ = 630 nm, R = 2 m, küçük ölçüm hataları eklendi. Kesikli çizgi tozsuz durumu gösteriyor.</figcaption>
+  </figure>
+  <div class="keep">
+    <span class="k">Hocaya cevap</span>
+    <p><strong>Grafik (eğim) yöntemi daha iyidir.</strong> Toz ya da baskı doğruyu sadece yukarı/aşağı kaydırır, eğimi değiştirmez. Ayrıca bütün ölçümleri birlikte kullandığı için tek tek hatalar ortalanır.</p>
+  </div>
+  <div class="quiz">
+    <span class="qt">Kendini dene</span>
+    <p class="q">r²–m grafiğinin eğimi neye eşittir?</p>
+    <div class="opts">
+      <button type="button" class="opt" data-opt="yanlis">λ</button>
+      <button type="button" class="opt" data-opt="dogru">λR</button>
+      <button type="button" class="opt" data-opt="yanlis">R / λ</button>
+    </div>
+    <p class="fb fb-ok" role="status" hidden><b>Doğru.</b> Eğimi Aşama A'da bulduğun R'ye bölersen λ çıkar.</p>
+    <p class="fb fb-no" role="status" hidden><b>Bir daha bak.</b> r² = (λR)·m + ½λR. m'nin önündeki çarpan ne?</p>
+  </div>
+</section>
+
+<!-- ============ ADIM 11 ============ -->
+<section class="step" data-step="11" id="adim-11" aria-labelledby="t11" hidden>
+  <div class="head">
+    <p class="eyebrow">Adım 11 / 11</p>
+    <h2 id="t11">Föyün soruları</h2>
+    <p class="lead">Rapor ve sözlü için föydeki soruların basit cevapları. Önce kendin düşün, sonra aç.</p>
+  </div>
+  <div class="warn">
+    <h3>Föyde yanlış ya da eksik yazılmış yerler</h3>
+    <ul>
+      <li><strong>s.19:</strong> "Bir aydınlık çizgiden diğerine kalınlık λ kadar değişir" diyor. Doğrusu <strong>½λ</strong>; λ kadar değişen 2d.</li>
+      <li><strong>Soru 8:</strong> "Işığın havadaki hızı boşluktakinden 1,000292 kez büyük" diyor. Tersi doğru: <strong>boşluktaki hız havadakinin 1,000292 katı</strong> (n<sub>hava</sub> = c/v).</li>
+      <li><strong>Soru 10:</strong> MgF₂ kalınlığı için 1000 Å diyor. Hesap d = λ/4n = 5000/(4 × 1,38) ≈ <strong>906 Å</strong> veriyor. Föydeki değeri yaklaşık değer olarak düşün.</li>
+    </ul>
+  </div>
+  <div class="qa">
+    <details>
+      <summary>Metindeki soru: Hava yerine, indisi üst camdan büyük, alt camdan küçük bir yağ koyarsak merkez nasıl olur?</summary>
+      <div>
+        <p><strong>Aydınlık.</strong> Üst yüzeyde ışık camdan yağa (daha yoğuna) çarpar: ters döner. Alt yüzeyde yağdan cama (yine daha yoğuna) çarpar: o da ters döner.</p>
+        <p>İkisi de ters döndüğü için ½λ'lar birbirini götürür. Merkezde d = 0 iken fark sıfır kalır, yani aydınlık.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Metindeki soru: İki ayrı ışık kaynağıyla girişim elde edebilir misin?</summary>
+      <div>
+        <p><strong>Hayır.</strong> Girişim için iki dalganın aralarındaki faz farkı sabit kalmalı (eş fazlı, "coherent"). İki ayrı ampulün ışığının fazı rastgele ve çok hızlı değişir, desen anında silinir. Newton halkalarında iki ışın aynı ışından ayrıldığı için bu sorun yok.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 1: Geniş (boşalma tüpü gibi) bir kaynakla koşut yüzlü filmde desen neden çember olur?</summary>
+      <div>
+        <p>Koşut yüzlü filmde kalınlık her yerde aynıdır; fark sadece ışığın geliş açısına bağlıdır: 2nd·cosφ′. Geniş kaynaktan her açıda ışık gelir. <strong>Aynı açıyla gelen ışınlar aynı halkayı</strong> oluşturur. Eksen etrafında aynı açı bir koni, yani bir çember demek. Bunlara "eşit eğim saçakları" denir. Newton halkaları ise "eşit kalınlık saçakları"dır.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 2–3: Beyaz ışıkta ince film neden renkli görünür? Mavi için karanlık koşulu sağlanırsa ne görülür?</summary>
+      <div>
+        <p>Beyaz ışık bütün renkleri içerir. Belli bir kalınlıkta bazı renkler söner, bazıları güçlenir. 2nd·cosφ′ = mλ koşulu mavi için sağlanıyorsa <strong>mavi söner</strong>, geriye kalan renkler (sarı, kırmızı tonları) görülür.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 4: İnce filmlerin farklı renklerde görünmesi kalınlıkla nasıl ilgili?</summary>
+      <div>
+        <p>Hangi rengin güçleneceğini kalınlık belirler: λ = 2nd / (m + ½). Kalınlık değişince güçlenen dalga boyu da değişir. Sabun köpüğünde ya da sudaki yağ lekesinde kalınlık yer yer farklı olduğu için renk renk görünür.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 5: Filmden geçen ışıkta da girişim olur mu? Neden daha soluk ve merkez neden aydınlık?</summary>
+      <div>
+        <p><strong>Olur, aynı formüller geçerli ama aydınlık ve karanlık yer değiştirir.</strong> Geçen ışıkta ikinci ışın iki kez yansır ve iki kez de ters döner. İki ters dönme birbirini götürür, net kayma yok. Bu yüzden merkezde (d = 0) fark sıfır: <strong>aydınlık</strong>.</p>
+        <p><strong>Neden soluk?</strong> Doğrudan geçen ışın çok güçlü (ışığın ~%92'si), iki kez yansıyan ışın çok zayıf (~%0,2). Biri çok güçlü, diğeri çok zayıf olunca birbirini tam söndüremezler. Yansımada ise iki ışının şiddeti neredeyse eşittir, karanlıklar zifiri olur.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 6: Beyaz ışıkta neden sadece birkaç renkli halka görülür?</summary>
+      <div>
+        <p>Halka yarıçapı dalga boyuna bağlı: r² = (m + ½)λR. Her renk kendi yerinde halka yapar. Mor (kısa λ) içte, kırmızı (uzun λ) dışta kalır. Birkaç halkadan sonra farklı renklerin halkaları üst üste biner ve karışıp beyaza döner. Tek renkli ışıkta böyle bir karışma olmadığı için çok sayıda halka görülür. (Adım 7'de "Beyaz ışık" seçip görebilirsin.)</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 7: Merceğin tam küresel tıraşlanıp tıraşlanmadığı nasıl anlaşılır?</summary>
+      <div>
+        <p>Halkalar, aynı kalınlıktaki noktaların haritasıdır. Yüzey tam küresel ise halkalar <strong>kusursuz çember</strong> olur ve r² ile m arasındaki ilişki doğrusal çıkar. Yüzeyde λ'nın bir kesri kadar bile bozukluk varsa halkalar çarpılır, yamulur. Düzlük testindeki hava kaması için de aynısı geçerli: pürüzlü yüzeyde saçaklar düz ve koşut çizgiler olmaz.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 8: Havanın kırma indisini n = 1 almakla ne kadar hata yapılır?</summary>
+      <div>
+        <p>Gerçekte n<sub>hava</sub> = 1,000292. n = 1 almak yaklaşık <strong>%0,03</strong> hata getirir. Bu, cetvel ölçümlerinden gelen birkaç yüzdelik hatanın yanında yok sayılabilir.</p>
+        <p>Üstelik R ve λ'yı aynı varsayımla bulduğumuz için bu hata kendi kendini götürür. (Föyde hız oranı ters yazılmış, yukarıdaki kutuya bak.)</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 9–10: Mercekler neden MgF₂ ile kaplanır? Kalınlık neden ~1000 Å?</summary>
+      <div>
+        <p>Amaç yansımayı azaltmak. Hava (n = 1) → MgF₂ (1,38) → cam (1,50). İki yansıma da daha yoğun ortamdan olur, ikisi de ters döner, ½λ'lar birbirini götürür.</p>
+        <p>Sönme için fark yarım kat olmalı: 2nd = (M + ½)λ. En ince kaplama M = 0: d = λ/4n = 5000/(4 × 1,38) ≈ <strong>906 Å</strong>. Föy bunu yaklaşık 1000 Å diye veriyor.</p>
+      </div>
+    </details>
+    <details>
+      <summary>Soru 11: Dalga boyu ile halka yarıçapı arasında nasıl bir ilişki var?</summary>
+      <div>
+        <p>Aynı halka (aynı m) ve aynı mercek için <strong>r² ∝ λ</strong>, yani <strong>r ∝ √λ</strong>. Kırmızı ışıkta halkalar maviye göre daha büyük olur. Bu yüzden aynı halka için λ₂ = λ₁ · (r₂/r₁)² yazılabilir.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+      <div class="pager">
+        <button type="button" class="btn ghost" id="prevBtn">← Geri</button>
+        <span id="pagerInfo">1 / 11</span>
+        <button type="button" class="btn" id="nextBtn">İleri →</button>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function $(s, el) { return (el || document).querySelector(s); }
+  function $$(s, el) { return Array.prototype.slice.call((el || document).querySelectorAll(s)); }
+  function fmt(x, d) { return x.toLocaleString('tr-TR', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+  function fmtT(x, d) { return x.toLocaleString('tr-TR', { maximumFractionDigits: d }); }
+  function num(id) { var el = document.getElementById(id); var v = el.valueAsNumber; return Number.isFinite(v) ? v : NaN; }
+
+  /* ---------- Adım gezinme ---------- */
+  var steps = $$('.step');
+  var total = steps.length;
+  var navBtns = $$('[data-go]');
+  var strip = $('#stepList');
+  var prevBtn = $('#prevBtn'), nextBtn = $('#nextBtn'), pagerInfo = $('#pagerInfo');
+  var current = 0;
+
+  function parseHash() {
+    var m = /^#adim-(\d+)$/.exec(location.hash);
+    return m ? Number(m[1]) : null;
+  }
+
+  function show(n, scroll) {
+    n = Math.min(total, Math.max(1, Math.round(n)));
+    if (n === current) return;
+    current = n;
+    steps.forEach(function (s) { s.hidden = Number(s.dataset.step) !== n; });
+    var active = null;
+    navBtns.forEach(function (b) {
+      if (Number(b.dataset.go) === n) { b.setAttribute('aria-current', 'step'); active = b; }
+      else b.removeAttribute('aria-current');
+    });
+    prevBtn.disabled = n === 1;
+    nextBtn.disabled = n === total;
+    pagerInfo.textContent = n + ' / ' + total;
+    try { history.replaceState(null, '', '#adim-' + n); } catch (e) { /* çerçeve izin vermeyebilir */ }
+    try { localStorage.setItem('nh-adim', String(n)); } catch (e) { /* depolama kapalı olabilir */ }
+    if (active && strip.scrollWidth > strip.clientWidth) {
+      strip.scrollLeft = active.parentElement.offsetLeft - (strip.clientWidth - active.offsetWidth) / 2;
+    }
+    if (scroll) $('#main').scrollIntoView({ block: 'start', behavior: reduceMotion ? 'auto' : 'smooth' });
+  }
+
+  var start = parseHash();
+  if (!start) {
+    try {
+      var saved = Number(localStorage.getItem('nh-adim'));
+      if (saved >= 1 && saved <= total) start = saved;
+    } catch (e) { /* yok say */ }
+  }
+  show(start || 1, false);
+  window.addEventListener('hashchange', function () { var h = parseHash(); if (h) show(h, true); });
+  prevBtn.addEventListener('click', function () { show(current - 1, true); });
+  nextBtn.addEventListener('click', function () { show(current + 1, true); });
+  navBtns.forEach(function (b) { b.addEventListener('click', function () { show(Number(b.dataset.go), true); }); });
+
+  /* ---------- Kendini dene ---------- */
+  $$('.quiz').forEach(function (q) {
+    var opts = $$('button[data-opt]', q);
+    var ok = $('.fb-ok', q), no = $('.fb-no', q);
+    opts.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var right = btn.dataset.opt === 'dogru';
+        opts.forEach(function (b) { b.classList.remove('is-right', 'is-wrong'); });
+        btn.classList.add(right ? 'is-right' : 'is-wrong');
+        ok.hidden = !right;
+        no.hidden = right;
+      });
+    });
+  });
+
+  /* ---------- Dalga çizici (Adım 1 ve 5) ---------- */
+  function wavePath(x0, x1, fn) {
+    var N = 240, d = '';
+    for (var i = 0; i <= N; i++) {
+      var x = x0 + (x1 - x0) * i / N;
+      d += (i ? 'L' : 'M') + x.toFixed(1) + ' ' + fn(x).toFixed(1);
+    }
+    return d;
+  }
+  function drawWaves(svg, shift) {
+    var L = 125, A = 24, x0 = 100, x1 = 590, k = 2 * Math.PI / L, ph = 2 * Math.PI * shift;
+    $('.w1', svg).setAttribute('d', wavePath(x0, x1, function (x) { return 55 - A * Math.sin(k * (x - x0)); }));
+    $('.w2', svg).setAttribute('d', wavePath(x0, x1, function (x) { return 140 - A * Math.sin(k * (x - x0) - ph); }));
+    $('.ws', svg).setAttribute('d', wavePath(x0, x1, function (x) { return 240 - A * (Math.sin(k * (x - x0)) + Math.sin(k * (x - x0) - ph)); }));
+  }
+  function verdict(shift) {
+    var a = Math.abs(Math.cos(Math.PI * shift));
+    if (a > 0.995) return 'aydinlik';
+    if (a < 0.005) return 'karanlik';
+    return 'arada';
+  }
+  var CHIP_TEXT = { aydinlik: 'AYDINLIK · yapıcı girişim', karanlik: 'KARANLIK · yıkıcı girişim', arada: 'Arada · kısmen aydınlık' };
+  function setChip(el, v) { el.className = 'chip ' + v; el.textContent = CHIP_TEXT[v]; }
+
+  var wave1 = $('#wave1'), s1 = $('#s1shift'), s1val = $('#s1val'), s1chip = $('#s1chip');
+  function upd1() {
+    var s = Number(s1.value);
+    drawWaves(wave1, s);
+    s1val.textContent = fmtT(s, 2) + ' λ';
+    setChip(s1chip, verdict(s));
+  }
+  s1.addEventListener('input', upd1);
+  upd1();
+
+  function gcd(a, b) { while (b) { var t = b; b = a % b; a = t; } return a; }
+  function frac16(x) {
+    var n = Math.round(x * 16);
+    if (n === 0) return '0';
+    var g = gcd(n, 16), a = n / g, b = 16 / g;
+    return b === 1 ? a + 'λ' : a + '/' + b + ' λ';
+  }
+  var wave5 = $('#wave5'), s5 = $('#s5d'), s5dVal = $('#s5dVal'), s5calc = $('#s5calc'), s5chip = $('#s5chip'), s5ring = $('#s5ring');
+  function upd5() {
+    var d = Number(s5.value);
+    var twoD = 2 * d;
+    var fark = twoD + 0.5;
+    drawWaves(wave5, fark);
+    s5dVal.textContent = frac16(d);
+    s5calc.textContent = '2d = ' + frac16(twoD) + ' · ters dönme = +½λ · toplam fark = ' + frac16(fark);
+    var v = verdict(fark);
+    setChip(s5chip, v);
+    if (v === 'karanlik') {
+      var mk = Math.round(twoD);
+      s5ring.textContent = mk === 0 ? 'Merkezdeki karanlık nokta (m = 0)' : mk + '. karanlık halka (m = ' + mk + ')';
+    } else if (v === 'aydinlik') {
+      var ma = Math.round(twoD - 0.5);
+      s5ring.textContent = (ma + 1) + '. aydınlık halka (m = ' + ma + ')';
+    } else {
+      s5ring.textContent = 'İki halkanın arası: ne tam aydınlık ne tam karanlık';
+    }
+  }
+  s5.addEventListener('input', upd5);
+  upd5();
+
+  /* ---------- Adım 3: kesit ---------- */
+  var s3 = $('#s3r'), s3rVal = $('#s3rVal'), s3out = $('#s3out');
+  var dR = $('#dR'), dL = $('#dL'), dLabel = $('#dLabel'), rLine = $('#rLine'), rLabel = $('#rLabel'), topRing = $('#topRing');
+  var K3 = 60 / (260 * 260);
+  function upd3() {
+    var r = Number(s3.value);
+    var dx = r / 3 * 260;
+    var yLens = 200 - K3 * dx * dx;
+    var xR = 300 + dx, xL = 300 - dx;
+    dR.setAttribute('x1', xR); dR.setAttribute('x2', xR); dR.setAttribute('y1', yLens);
+    dL.setAttribute('x1', xL); dL.setAttribute('x2', xL); dL.setAttribute('y1', yLens);
+    var right = xR > 470;
+    dLabel.setAttribute('x', right ? xR - 10 : xR + 10);
+    dLabel.setAttribute('text-anchor', right ? 'end' : 'start');
+    dLabel.setAttribute('y', Math.min(196, (yLens + 200) / 2 + 6));
+    rLine.setAttribute('x2', xR);
+    rLabel.setAttribute('x', 300 + dx / 2 - 4);
+    topRing.setAttribute('r', (r / 3 * 80).toFixed(1));
+    var dUm = (r * r) / (2 * 2000) * 1000; // r mm, R = 2000 mm -> μm
+    s3rVal.textContent = fmtT(r, 1) + ' mm';
+    s3out.textContent = 'Hava kalınlığı d ≈ ' + fmt(dUm, 2) + ' μm (sarı ışığın dalga boyunun ' + fmt(dUm / 0.589, 1) + ' katı)';
+  }
+  s3.addEventListener('input', upd3);
+  upd3();
+
+  /* ---------- Adım 7: halka simülasyonu ---------- */
+  function wl2rgb(wl) {
+    var r = 0, g = 0, b = 0;
+    if (wl < 440) { r = -(wl - 440) / 60; b = 1; }
+    else if (wl < 490) { g = (wl - 440) / 50; b = 1; }
+    else if (wl < 510) { g = 1; b = -(wl - 510) / 20; }
+    else if (wl < 580) { r = (wl - 510) / 70; g = 1; }
+    else if (wl < 645) { r = 1; g = -(wl - 645) / 65; }
+    else { r = 1; }
+    return [r, g, b];
+  }
+  function colorName(wl) {
+    if (wl < 450) return 'mor';
+    if (wl < 495) return 'mavi';
+    if (wl < 570) return 'yeşil';
+    if (wl < 590) return 'sarı';
+    if (wl < 620) return 'turuncu';
+    return 'kırmızı';
+  }
+  var SPECTRUM = [], SUM = [0, 0, 0];
+  for (var w = 400; w <= 700; w += 5) {
+    var c = wl2rgb(w);
+    SPECTRUM.push({ l: w * 1e-9, r: c[0], g: c[1], b: c[2] });
+    SUM[0] += c[0]; SUM[1] += c[1]; SUM[2] += c[2];
+  }
+  var FIELD_MM = 3;
+  var cvs = $('#rings'), screenBox = cvs.parentElement, ctx = cvs.getContext('2d');
+  var lamIn = $('#lam'), lamVal = $('#lamVal'), radIn = $('#radR'), radVal = $('#radRVal');
+  var modeMono = $('#modeMono'), modeWhite = $('#modeWhite'), hlSel = $('#hl');
+  var ringBody = $('#ringTable tbody'), simNote = $('#simNote');
+  var pending = false;
+
+  function scheduleDraw() {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(function () { pending = false; drawRings(); });
+  }
+
+  function drawRings() {
+    var css = Math.floor(screenBox.clientWidth);
+    if (css < 10) return; // adım gizliyken çizme
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    var size = Math.round(css * dpr);
+    if (cvs.width !== size) { cvs.width = size; cvs.height = size; }
+    var half = size / 2;
+    var pxPerMm = half / FIELD_MM;
+    var lamNm = Number(lamIn.value), lam = lamNm * 1e-9;
+    var R = Number(radIn.value);
+    var white = modeWhite.checked;
+    var n = Math.ceil(half * Math.SQRT2) + 2;
+    var lut = new Uint8ClampedArray(n * 3);
+    var col = wl2rgb(lamNm), cmax = Math.max(col[0], col[1], col[2]) || 1;
+    var i, j;
+    for (i = 0; i < n; i++) {
+      var r = (i / pxPerMm) * 1e-3;     // metre
+      var d = r * r / (2 * R);           // hava kalınlığı
+      j = i * 3;
+      if (!white) {
+        var s = Math.sin(2 * Math.PI * d / lam);
+        var I = s * s;                   // yansıyan ışık: merkezde 0
+        lut[j] = 255 * I * col[0] / cmax;
+        lut[j + 1] = 255 * I * col[1] / cmax;
+        lut[j + 2] = 255 * I * col[2] / cmax;
+      } else {
+        var ar = 0, ag = 0, ab = 0;
+        for (var q = 0; q < SPECTRUM.length; q++) {
+          var sp = SPECTRUM[q], ss = Math.sin(2 * Math.PI * d / sp.l), Iq = ss * ss;
+          ar += sp.r * Iq; ag += sp.g * Iq; ab += sp.b * Iq;
+        }
+        lut[j] = 255 * 1.6 * ar / SUM[0];
+        lut[j + 1] = 255 * 1.6 * ag / SUM[1];
+        lut[j + 2] = 255 * 1.6 * ab / SUM[2];
+      }
+    }
+    var img = ctx.createImageData(size, size), data = img.data, p = 0;
+    for (var y = 0; y < size; y++) {
+      var dy = y + 0.5 - half, dy2 = dy * dy;
+      for (var x = 0; x < size; x++) {
+        var dx = x + 0.5 - half;
+        j = (Math.sqrt(dx * dx + dy2) | 0) * 3;
+        data[p] = lut[j]; data[p + 1] = lut[j + 1]; data[p + 2] = lut[j + 2]; data[p + 3] = 255;
+        p += 4;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+    var m = Number(hlSel.value);
+    if (!white && m >= 0) {
+      var rPx = Math.sqrt((m + 0.5) * lam * R) * 1e3 * pxPerMm;
+      if (rPx < half) {
+        ctx.save();
+        ctx.setLineDash([6 * dpr, 5 * dpr]);
+        ctx.lineWidth = 1.6 * dpr;
+        ctx.strokeStyle = 'rgba(255,255,255,0.95)';
+        ctx.beginPath();
+        ctx.arc(half, half, rPx, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+
+  function updSim() {
+    var lamNm = Number(lamIn.value), R = Number(radIn.value), white = modeWhite.checked;
+    var c = wl2rgb(lamNm), cm = Math.max(c[0], c[1], c[2]) || 1;
+    var rgb = 'rgb(' + Math.round(255 * c[0] / cm) + ',' + Math.round(255 * c[1] / cm) + ',' + Math.round(255 * c[2] / cm) + ')';
+    lamVal.innerHTML = '';
+    var sw = document.createElement('span');
+    sw.className = 'swatch';
+    sw.style.background = rgb;
+    lamVal.appendChild(sw);
+    lamVal.appendChild(document.createTextNode(lamNm + ' nm (' + colorName(lamNm) + ')'));
+    radVal.textContent = fmt(R, 1) + ' m';
+    lamIn.disabled = white;
+    hlSel.disabled = white;
+    $$('.preset').forEach(function (b) { b.disabled = white; });
+    ringBody.textContent = '';
+    if (white) {
+      var tr = document.createElement('tr');
+      var td = document.createElement('td');
+      td.colSpan = 3;
+      td.style.whiteSpace = 'normal';
+      td.textContent = 'Beyaz ışıkta tek bir r yok: her renk kendi yarıçapında halka yapar.';
+      tr.appendChild(td);
+      ringBody.appendChild(tr);
+    } else {
+      var hl = Number(hlSel.value);
+      for (var m = 0; m < 5; m++) {
+        var r = Math.sqrt((m + 0.5) * lamNm * 1e-9 * R) * 1e3;
+        var row = document.createElement('tr');
+        if (m === hl) row.className = 'row-hl';
+        [(m + 1) + '.', String(m), fmt(r, 2) + (r > FIELD_MM ? ' (görüntü dışı)' : '')].forEach(function (t) {
+          var cell = document.createElement('td'); cell.textContent = t; row.appendChild(cell);
+        });
+        ringBody.appendChild(row);
+      }
+    }
+    simNote.textContent = white
+      ? 'Merkez yine karanlık. İçte mor, dışta kırmızı halkalar; birkaç halkadan sonra renkler karışıp kaybolur.'
+      : 'Görüntü merkezden ±3 mm\'lik alanı gerçek boyutta gösteriyor (perdedeki büyütülmüş hali değil).';
+    scheduleDraw();
+  }
+  [lamIn, radIn, hlSel].forEach(function (el) { el.addEventListener('input', updSim); });
+  [modeMono, modeWhite].forEach(function (el) { el.addEventListener('change', updSim); });
+  $$('.preset').forEach(function (b) {
+    b.addEventListener('click', function () { lamIn.value = b.dataset.lam; updSim(); });
+  });
+  var lastW = -1;
+  if (typeof ResizeObserver !== 'undefined') {
+    new ResizeObserver(function (entries) {
+      var wNow = Math.floor(entries[0].contentRect.width);
+      if (wNow !== lastW) { lastW = wNow; scheduleDraw(); }
+    }).observe(screenBox);
+  } else {
+    window.addEventListener('resize', scheduleDraw);
+  }
+  updSim();
+
+  /* ---------- Adım 8: büyütme hesaplayıcı ---------- */
+  function line(text, cls) { var p = document.createElement('p'); if (cls) p.className = cls; p.textContent = text; return p; }
+  function fill(el, lines) { el.textContent = ''; lines.forEach(function (l) { el.appendChild(l); }); }
+  function pos(v) { return Number.isFinite(v) && v > 0; }
+
+  var c8out = $('#c8out');
+  function upd8() {
+    var g = num('c8g'), P = num('c8P'), Pp = num('c8Pp');
+    if (!pos(g) || !pos(P) || !pos(Pp)) { fill(c8out, [line('Üç kutuya da sıfırdan büyük bir sayı yaz.', 'err')]); return; }
+    var c = g * P / Pp;
+    fill(c8out, [
+      line('Büyütme P′/P = ' + fmtT(Pp / P, 2) + ' kat'),
+      line('c = g × P/P′ = ' + fmtT(g, 2) + ' × ' + fmtT(P, 2) + ' / ' + fmtT(Pp, 2)),
+      line('c = ' + fmt(c, 3) + ' mm  (formüle bunu koy)', 'big')
+    ]);
+  }
+  ['c8g', 'c8P', 'c8Pp'].forEach(function (id) { document.getElementById(id).addEventListener('input', upd8); });
+  upd8();
+
+  /* ---------- Adım 9: iki aşamalı hesap ---------- */
+  var aOut = $('#aOut'), bOut = $('#bOut');
+  function intOk(m) { return Number.isInteger(m) && m >= 0; }
+  function upd9() {
+    var lamA = num('aLam'), mA = num('aM'), gA = num('aG'), P = num('aP'), Pp = num('aPp');
+    var mB = num('bM'), gB = num('bG'), ref = num('bRef');
+    var R = NaN;
+    if (!pos(lamA) || !pos(gA) || !pos(P) || !pos(Pp) || !intOk(mA)) {
+      fill(aOut, [line('λ, g, P ve P′ sıfırdan büyük olmalı; m 0, 1, 2 … gibi bir tam sayı olmalı.', 'err')]);
+    } else {
+      var cA = gA * P / Pp;
+      R = Math.pow(cA * 1e-3, 2) / ((mA + 0.5) * lamA * 1e-9);
+      fill(aOut, [
+        line('c = ' + fmtT(gA, 2) + ' × ' + fmtT(P, 2) + '/' + fmtT(Pp, 2) + ' = ' + fmt(cA, 3) + ' mm'),
+        line('R = c² / ((m + ½)·λ) = (' + fmt(cA, 3) + ' mm)² / (' + fmtT(mA + 0.5, 1) + ' × ' + fmtT(lamA, 1) + ' nm)'),
+        line('R = ' + fmt(R, 3) + ' m', 'big')
+      ]);
+    }
+    if (!Number.isFinite(R)) { fill(bOut, [line('Önce Aşama A\'yı doldur; λ için R gerekiyor.', 'err')]); return; }
+    if (!pos(gB) || !intOk(mB)) { fill(bOut, [line('g sıfırdan büyük, m 0, 1, 2 … gibi bir tam sayı olmalı.', 'err')]); return; }
+    var cB = gB * P / Pp;
+    var lamB = Math.pow(cB * 1e-3, 2) / ((mB + 0.5) * R) * 1e9;
+    var lines = [
+      line('c = ' + fmtT(gB, 2) + ' × ' + fmtT(P, 2) + '/' + fmtT(Pp, 2) + ' = ' + fmt(cB, 3) + ' mm'),
+      line('λ = c² / ((m + ½)·R) = (' + fmt(cB, 3) + ' mm)² / (' + fmtT(mB + 0.5, 1) + ' × ' + fmt(R, 3) + ' m)'),
+      line('λ = ' + fmt(lamB, 1) + ' nm', 'big')
+    ];
+    if (pos(ref)) lines.push(line('% hata = |' + fmt(lamB, 1) + ' − ' + fmtT(ref, 1) + '| / ' + fmtT(ref, 1) + ' × 100 = %' + fmt(Math.abs(lamB - ref) / ref * 100, 2)));
+    fill(bOut, lines);
+  }
+  ['aLam', 'aM', 'aG', 'aP', 'aPp', 'bM', 'bG', 'bRef'].forEach(function (id) { document.getElementById(id).addEventListener('input', upd9); });
+  upd9();
+
+  /* ---------- Adım 10: r²–m grafiği ---------- */
+  var NS = 'http://www.w3.org/2000/svg';
+  var chart = $('#chart'), d0In = $('#d0'), d0Val = $('#d0Val'), chartOut = $('#chartOut');
+  var NOISE = [0.02, -0.03, 0.04, -0.02, 0.03, -0.04];
+  var LAM_TRUE_NM = 630, R10 = 2.0;
+  var X0 = 70, X1 = 540, Y0 = 280, Y1 = 20, XMIN = -0.5, XMAX = 5.5, YMAX = 8;
+  function sx(m) { return X0 + (m - XMIN) / (XMAX - XMIN) * (X1 - X0); }
+  function sy(v) { return Y0 - v / YMAX * (Y0 - Y1); }
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || chart).appendChild(e);
+    return e;
+  }
+  function tx(x, y, s, attrs) { var t = el('text', Object.assign({ x: x, y: y }, attrs || {})); t.textContent = s; return t; }
+
+  var defs = el('defs', {});
+  var clip = el('clipPath', { id: 'plotClip' }, defs);
+  el('rect', { x: X0, y: Y1, width: X1 - X0, height: Y0 - Y1 }, clip);
+  for (var gy = 0; gy <= YMAX; gy += 2) {
+    el('line', { 'class': 'grid', x1: X0, x2: X1, y1: sy(gy), y2: sy(gy) });
+    tx(X0 - 10, sy(gy) + 5, String(gy), { 'class': 'muted', 'text-anchor': 'end' });
+  }
+  for (var gx = 0; gx <= 5; gx++) {
+    tx(sx(gx), Y0 + 22, String(gx), { 'class': 'muted', 'text-anchor': 'middle' });
+  }
+  el('line', { 'class': 'axis', x1: X0, x2: X1, y1: Y0, y2: Y0 });
+  el('line', { 'class': 'axis', x1: X0, x2: X0, y1: Y0, y2: Y1 });
+  tx((X0 + X1) / 2, Y0 + 46, 'm (halka numarası)', { 'text-anchor': 'middle' });
+  tx(X0 - 6, Y1 - 4, 'r² (mm²)', { 'text-anchor': 'start', 'class': 'muted' });
+  var fit0 = el('line', { 'class': 'fit0', 'clip-path': 'url(#plotClip)' });
+  var fit = el('line', { 'class': 'fit', 'clip-path': 'url(#plotClip)' });
+  var pts = NOISE.map(function () { return el('circle', { 'class': 'pt', r: 6 }); });
+
+  function dataFor(d0) {
+    // r² (mm²) = (m+½)·λR − 2R·d0  ; λR = 1,26 mm², 2R·d0[μm] = 4·d0 mm²
+    return NOISE.map(function (nz, m) { return (m + 0.5) * LAM_TRUE_NM * 1e-9 * R10 * 1e6 - 2 * R10 * d0 + nz; });
+  }
+  function lsq(ys) {
+    var n = ys.length, xm = (n - 1) / 2, ym = 0, sxy = 0, sxx = 0, i;
+    for (i = 0; i < n; i++) ym += ys[i];
+    ym /= n;
+    for (i = 0; i < n; i++) { sxy += (i - xm) * (ys[i] - ym); sxx += (i - xm) * (i - xm); }
+    var slope = sxy / sxx;
+    return { slope: slope, icpt: ym - slope * xm };
+  }
+  function setLine(lineEl, f) {
+    lineEl.setAttribute('x1', sx(XMIN)); lineEl.setAttribute('y1', sy(f.icpt + f.slope * XMIN));
+    lineEl.setAttribute('x2', sx(XMAX)); lineEl.setAttribute('y2', sy(f.icpt + f.slope * XMAX));
+  }
+  setLine(fit0, lsq(dataFor(0)));
+  function upd10() {
+    var d0 = Number(d0In.value);
+    var ys = dataFor(d0);
+    ys.forEach(function (v, m) { pts[m].setAttribute('cx', sx(m)); pts[m].setAttribute('cy', sy(v)); });
+    var f = lsq(ys);
+    setLine(fit, f);
+    var lamSlope = f.slope * 1e-6 / R10 * 1e9;
+    var lamOne = ys[2] * 1e-6 / (2.5 * R10) * 1e9;
+    var e1 = Math.abs(lamSlope - LAM_TRUE_NM) / LAM_TRUE_NM * 100;
+    var e2 = Math.abs(lamOne - LAM_TRUE_NM) / LAM_TRUE_NM * 100;
+    d0Val.textContent = (d0 > 0 ? '+' : '') + fmt(d0, 2) + ' μm';
+    fill(chartOut, [
+      line('Eğim yöntemi: eğim = ' + fmt(f.slope, 3) + ' mm² → λ = eğim/R = ' + fmt(lamSlope, 0) + ' nm (hata %' + fmt(e1, 1) + ')', 'big'),
+      line('Tek halka yöntemi (3. aydınlık, m = 2): λ = ' + fmt(lamOne, 0) + ' nm (hata %' + fmt(e2, 1) + ')', e2 > 3 ? 'err' : '')
+    ]);
+  }
+  d0In.addEventListener('input', upd10);
+  upd10();
+})();
+</script>
+
+</body>
+</html>
